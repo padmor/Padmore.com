@@ -1,0 +1,5 @@
+import Link from "next/link";
+import { DemoAuthForm } from "@/features/auth/components/demo-auth-form";
+import { Icon } from "@/components/icon";
+export const metadata = { title: "Sign in" };
+export default function SignInPage() { return <section className="page-container auth-page"><div className="auth-aside"><span className="eyebrow">WELCOME BACK</span><h1>Pick up where you left off.</h1><p>Keep track of saved projects, updates and the work you're following.</p><div className="auth-art">✦</div></div><div className="auth-panel"><Link href="/" className="brand"><span className="brand-mark">P</span><span>Padmore Yeb</span></Link><h2>Sign in</h2><p>Enter your details to continue.</p><DemoAuthForm mode="signin"/><div className="auth-links"><span>New here? <Link href="/signup">Create an account</Link></span><Link href="/">Back to home</Link></div><div className="notice-box"><Icon name="info"/><p>Authentication is not connected in this starter. No credentials are stored or transmitted.</p></div></div></section>; }
