@@ -3,8 +3,10 @@ import { PageIntro } from "@/components/page-intro";
 import { Icon } from "@/components/icon";
 import { AdminPreviewNotice } from "@/features/admin/components/admin-preview-notice";
 import { MetricCard } from "@/features/analytics/components/metric-card";
+import { requireRole } from "@/lib/auth/session";
 
 export const metadata = { title: "Admin dashboard" };
+export const dynamic = "force-dynamic";
 
 const adminLinks = [
   { label: "Dashboard", icon: "home", href: "/admin" },
@@ -17,7 +19,8 @@ const adminLinks = [
   { label: "Settings", icon: "settings", href: "/contact" },
 ] as const;
 
-export default function AdminPage() {
+export default async function AdminPage() {
+  await requireRole(["owner", "admin", "editor", "support"]);
   return (
     <section className="page-container content-page admin-page">
       <PageIntro eyebrow="PRIVATE MANAGEMENT AREA" title="Dashboard" description="A preview of the tools for managing your portfolio content and activity." />

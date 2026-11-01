@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { projects, tutorials } from "@/lib/data";
+import { tutorials } from "@/lib/data";
+import { listPublicProjects } from "@/modules/portfolio/repository";
 import { ProjectCard } from "@/features/projects/components/project-card";
 import { TutorialCard } from "@/features/tutorials/components/tutorial-card";
 import { SectionHeading } from "@/components/page-intro";
@@ -14,11 +15,13 @@ const values = [
   { icon: "heart" as const, title: "People first", text: "Keep real user needs at the centre of the solution." },
 ];
 
-export default function HomePage() {
+export const revalidate = 300;
+
+export default async function HomePage() {
+  const projects = await listPublicProjects();
   return <>
     <section className="hero page-container">
       <div className="hero-copy">
-        <span className="hero-kicker"><span className="pulse-dot"/> Build · Learn · Collaborate · Grow</span>
         <h1>Hi, I&apos;m Padmore Yeb <span className="wave">👋</span><br/>I build modern web &amp; mobile applications that solve <em>real problems.</em></h1>
         <p className="hero-description">Developer <span>·</span> Creator <span>·</span> Problem solver</p>
         <div className="hero-actions"><Link href="/projects" className="button button-primary">View my projects <Icon name="arrow" size={16}/></Link><Link href="/contact" className="button button-outline"><Icon name="mail" size={16}/> Contact me</Link></div>

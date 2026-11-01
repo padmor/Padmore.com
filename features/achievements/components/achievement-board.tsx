@@ -1,4 +1,4 @@
-import { achievements } from "@/lib/data";
+import { listPublicAchievements } from "@/modules/portfolio/repository";
 
 const timeline = [
   { title: "Learning foundations", desc: "HTML, CSS and JavaScript practice", date: "Add date" },
@@ -6,7 +6,8 @@ const timeline = [
   { title: "Growing the portfolio", desc: "Sharing projects and technical notes", date: "In progress" },
 ];
 
-export function AchievementBoard() {
+export async function AchievementBoard() {
+  const achievements = await listPublicAchievements();
   return <>
     <section id="achievements" className="section-block">
       <h2>My achievements</h2>

@@ -1,15 +1,16 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { projects } from "@/lib/data";
+import { getPublicProject, listPublicProjects } from "@/modules/portfolio/repository";
 import { ProjectArtwork } from "@/features/projects/components/project-artwork";
 import { StatusBadge } from "@/features/projects/components/project-card";
 import { Icon } from "@/components/icon";
 import { BookmarkButton } from "@/features/projects/components/bookmark-button";
 
-export function generateStaticParams() { return projects.map((project) => ({ slug: project.slug })); }
+export const revalidate = 300;
+export async function generateStaticParams() { return (await listPublicProjects()).map((project) => ({ slug: project.slug })); }
 export default async function ProjectDetailsPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const project = projects.find((item) => item.slug === slug);
+  const project = await getPublicProject(slug);
   if (!project) notFound();
   return <section className="page-container detail-page">
     <Link href="/projects" className="back-link"><Icon name="arrow" size={15}/> Back to projects</Link>

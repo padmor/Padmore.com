@@ -2,6 +2,7 @@ import { PageIntro } from "@/components/page-intro";
 import { Icon } from "@/components/icon";
 import { AchievementBoard } from "@/features/achievements/components/achievement-board";
 export const metadata = { title: "Achievements" };
+export const revalidate = 300;
 
 export default function AchievementsPage() {
   return <section className="page-container content-page">

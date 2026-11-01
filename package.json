@@ -7,17 +7,40 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:e2e": "node --no-warnings tests/auth-e2e.mjs",
+    "test:portfolio": "node --no-warnings tests/portfolio-e2e.mjs",
+    "test:forms": "node --no-warnings tests/forms-browser.mjs",
+    "test": "vitest run",
+    "db:migrate": "node --no-warnings scripts/db-migrate.mjs",
+    "db:seed": "node --no-warnings db/seed.ts",
+    "db:pull": "drizzle-kit pull"
   },
   "dependencies": {
+    "@neondatabase/auth": "^0.7.0-beta",
+    "@neondatabase/serverless": "^1.2.0",
+    "drizzle-orm": "^0.45.4",
     "next": "16.4.3",
     "react": "19.3.1",
-    "react-dom": "19.3.1"
+    "react-dom": "19.3.1",
+    "server-only": "^0.0.1",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@types/node": "^22.19.0",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
-    "typescript": "^6.0.3"
+    "dotenv": "^18.0.9",
+    "drizzle-kit": "^0.31.11",
+    "playwright-core": "^1.64.1",
+    "typescript": "6.0.3",
+    "vitest": "^5.0.5"
+  },
+  "overrides": {
+    "better-auth": "1.7.14",
+    "@better-auth/core": "1.7.14",
+    "@better-auth/oauth-provider": "1.7.14",
+    "@better-auth/passkey": "1.7.14",
+    "zod": "$zod"
   }
 }

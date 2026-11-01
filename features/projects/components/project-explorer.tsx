@@ -1,14 +1,14 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { projects } from "@/lib/data";
+import type { Project } from "@/lib/data";
 import { ProjectCard } from "@/features/projects/components/project-card";
 import { Icon } from "@/components/icon";
 
 const filters = ["All", "Web Apps", "Mobile Apps", "Design", "Backend", "Open Source"];
 const statuses = ["All statuses", "In Progress", "Testing", "Beta", "Completed", "Live"];
 
-export function ProjectExplorer() {
+export function ProjectExplorer({ projects }: { projects: Project[] }) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All");
   const [status, setStatus] = useState("All statuses");
@@ -20,7 +20,7 @@ export function ProjectExplorer() {
       const matchesStatus = status === "All statuses" || project.status === status;
       return matchesQuery && matchesCategory && matchesStatus;
     });
-  }, [query, category, status]);
+  }, [projects, query, category, status]);
 
   return <div className="explorer-layout">
     <aside className="project-sidebar"><strong>Categories</strong>{filters.map((filter) => <button key={filter} onClick={() => setCategory(filter)} className={category === filter ? "side-filter active" : "side-filter"}><span>{filter === "All" ? "◉" : "○"}</span>{filter}</button>)}</aside>

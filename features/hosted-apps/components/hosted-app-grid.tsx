@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { projects } from "@/lib/data";
+import { listPublicProjects } from "@/modules/portfolio/repository";
 import { ProjectArtwork } from "@/features/projects/components/project-artwork";
 import { StatusBadge } from "@/features/projects/components/project-card";
 
-export function HostedAppGrid() {
-  const apps = projects.filter((item) => item.status === "Live" || item.status === "Beta");
+export async function HostedAppGrid() {
+  const apps = (await listPublicProjects()).filter((item) => item.status === "Live" || item.status === "Beta");
   if (apps.length === 0) return <p className="muted-copy">No hosted applications have been listed yet.</p>;
 
   return <div className="hosted-grid">{apps.map((app) => <article className="hosted-card" key={app.slug}>
