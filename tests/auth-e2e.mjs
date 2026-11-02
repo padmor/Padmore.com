@@ -58,7 +58,7 @@ async function adminPage(cookie) {
   const html = await response.text();
   return {
     status: response.status,
-    hasContent: html.includes("Portfolio Admin") || html.includes("Total users"),
+    hasContent: html.includes("admin-sidebar") || html.includes("Total projects"),
     notFound: /NEXT_HTTP_ERROR_FALLBACK;404|could not be found|not found/i.test(html),
     redirected: response.status >= 300 && response.status < 400,
   };

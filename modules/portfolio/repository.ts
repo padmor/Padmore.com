@@ -11,12 +11,18 @@ const projectColumns = {
   slug: projects.slug,
   title: projects.title,
   summary: projects.summary,
+  description: projects.description,
+  demoUrl: projects.demoUrl,
   projectType: projects.projectType,
   category: projects.category,
   artwork: projects.artwork,
   lifecycleStatus: projects.lifecycleStatus,
   isFeatured: projects.isFeatured,
   updatedAt: projects.updatedAt,
+  imageId: projects.imageId,
+  isTested: projects.isTested,
+  startedOn: projects.startedOn,
+  completedOn: projects.completedOn,
 };
 
 // RLS enforces this as well. Stating it here keeps the rule visible in the query.
@@ -66,6 +72,9 @@ export async function listPublicAchievements() {
       description: achievements.description,
       achievedOn: achievements.achievedOn,
       icon: achievements.icon,
+      imageId: achievements.imageId,
+      organization: achievements.organization,
+      credentialUrl: achievements.credentialUrl,
     })
     .from(achievements)
     .where(eq(achievements.isPublished, true))
@@ -74,7 +83,10 @@ export async function listPublicAchievements() {
   return rows.map((row) => ({
     title: row.title,
     subtitle: row.description ?? "",
-    year: row.achievedOn?.slice(0, 4) ?? "Add year",
+    year: row.achievedOn?.slice(0, 4) ?? "",
     icon: row.icon ?? "★",
+    imageId: row.imageId,
+    organization: row.organization,
+    credentialUrl: row.credentialUrl,
   }));
 }

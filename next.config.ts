@@ -26,6 +26,10 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   compress: true,
+  experimental: {
+    // A 2 MB image plus the rest of the form.
+    serverActions: { bodySizeLimit: "3mb" },
+  },
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders }];
   },

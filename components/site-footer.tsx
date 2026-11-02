@@ -1,8 +1,13 @@
 import Link from "next/link";
 import { Icon } from "@/components/icon";
 import { NewsletterForm } from "@/features/contact/components/newsletter-form";
+import { listSocialLinks } from "@/modules/content/repository";
 
-export function SiteFooter() {
+const ICONS = { github: "github", linkedin: "linkedin", email: "mail", website: "globe", other: "globe" } as const;
+
+// The footer is on every page, so a database problem must not take a page down with it.
+export async function SiteFooter() {
+  const links = await listSocialLinks().catch(() => []);
   return (
     <footer className="site-footer">
       <div className="footer-main">
@@ -15,7 +20,7 @@ export function SiteFooter() {
         <div className="footer-column"><strong>Connect</strong><Link href="/build-with-me">Build with me</Link><Link href="/request-project">Request a project</Link><Link href="/community">Community</Link><Link href="/contact">Contact</Link></div>
         <div className="footer-newsletter"><strong>Get occasional updates</strong><p>New projects, useful tutorials and product releases.</p><NewsletterForm compact /></div>
       </div>
-      <div className="footer-bottom"><span>© {new Date().getFullYear()} Padmore Yeb. All rights reserved.</span><div className="social-links"><a href="https://github.com" aria-label="GitHub" target="_blank" rel="noreferrer"><Icon name="github"/></a><a href="https://linkedin.com" aria-label="LinkedIn" target="_blank" rel="noreferrer"><Icon name="linkedin"/></a><a href="/contact" aria-label="Contact"><Icon name="mail"/></a></div><span className="footer-tagline">Designed to build, share and grow.</span></div>
+      <div className="footer-bottom"><span>© {new Date().getFullYear()} Padmore Yeb. All rights reserved.</span><div className="social-links">{links.map((link) => <a key={link.url} href={link.url} aria-label={link.label ?? link.platform} target="_blank" rel="noopener noreferrer"><Icon name={ICONS[link.platform as keyof typeof ICONS] ?? "globe"}/></a>)}<a href="/contact" aria-label="Contact"><Icon name="mail"/></a></div><span className="footer-tagline">Designed to build, share and grow.</span></div>
     </footer>
   );
 }

@@ -18,7 +18,7 @@ describe("toProject", () => {
     expect(toProject(row, ["React"])).toMatchObject({ status: "Live", visual: "chat", stack: ["React"], updated: "Updated Mar 2026" });
   });
   it("falls back safely on unknown values", () => {
-    const mapped = toProject({ ...row, lifecycleStatus: "paused", artwork: "bad", projectType: null, summary: null, category: null }, []);
+    const mapped = toProject({ ...row, lifecycleStatus: "unknown", artwork: "bad", projectType: null, summary: null, category: null }, []);
     expect(mapped).toMatchObject({ status: "In Progress", visual: "portfolio", type: "Project", description: "", category: "Other" });
   });
   it("never passes through internal columns", () => {

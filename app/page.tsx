@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
-import { tutorials } from "@/lib/data";
+import { Portrait } from "@/features/content/components/site-image";
+import { getAbout, listPublicTutorials } from "@/modules/content/repository";
 import { listPublicProjects } from "@/modules/portfolio/repository";
 import { ProjectCard } from "@/features/projects/components/project-card";
 import { TutorialCard } from "@/features/tutorials/components/tutorial-card";
@@ -18,7 +18,7 @@ const values = [
 export const revalidate = 300;
 
 export default async function HomePage() {
-  const projects = await listPublicProjects();
+  const [projects, tutorials, about] = await Promise.all([listPublicProjects(), listPublicTutorials(3), getAbout()]);
   return <>
     <section className="hero page-container">
       <div className="hero-copy">
@@ -29,7 +29,7 @@ export default async function HomePage() {
       </div>
       <div className="hero-visual">
         <div className="hero-orbit hero-orbit-one"/><div className="hero-orbit hero-orbit-two"/><div className="hero-gradient-shape"/>
-        <div className="hero-photo-frame"><Image src="/images/portrait-reference-placeholder.webp" alt="Temporary portrait from the supplied design reference; replace with Padmore's own photo" fill priority sizes="(max-width: 700px) 70vw, 420px" className="hero-photo"/></div>
+        <div className="hero-photo-frame"><Portrait photoId={about.photo_id} priority sizes="(max-width: 700px) 70vw, 420px" className="hero-photo"/></div>
         <div className="hero-float-card availability-card"><span className="availability-check"><Icon name="check" size={13}/></span><span><strong>Build something meaningful</strong><small>Ideas · Projects · Collaboration</small></span></div>
         <div className="hero-float-card code-card"><span className="code-card-mark">&lt;/&gt;</span><span><strong>Always learning</strong><small>From idea to implementation</small></span></div>
         <span className="hero-mini-tag">Full-stack thinking</span>
@@ -46,7 +46,7 @@ export default async function HomePage() {
 
     <section className="page-container section-block two-feature-section"><div className="feature-panel feature-panel-blue"><span className="eyebrow">BUILD WITH ME</span><h2>Good ideas grow faster together.</h2><p>Meet other builders, explore collaboration opportunities and contribute to projects that solve real problems.</p><Link href="/build-with-me" className="button button-primary">Explore opportunities <Icon name="arrow" size={16}/></Link><div className="feature-art feature-art-team"><span>✳</span><span>⌘</span><span>↗</span></div></div><div className="feature-panel feature-panel-violet"><span className="eyebrow">HAVE AN IDEA?</span><h2>Tell me what you need built.</h2><p>Share the problem, your idea or a project brief. We can work through the best way to bring it to life.</p><Link href="/request-project" className="button button-dark">Request a project <Icon name="arrow" size={16}/></Link><div className="feature-art feature-art-project"><span>✦</span><span>▧</span></div></div></section>
 
-    <section className="page-container section-block"><SectionHeading title="Latest tutorials" description="Notes and practical guides from the things I'm learning." href="/tutorials"/><div className="tutorial-grid home-tutorial-grid">{tutorials.slice(0, 3).map((tutorial) => <TutorialCard key={tutorial.slug} tutorial={tutorial}/>)}</div></section>
+    {tutorials.length > 0 && <section className="page-container section-block"><SectionHeading title="Latest tutorials" description="Notes and practical guides from the things I'm learning." href="/tutorials"/><div className="tutorial-grid home-tutorial-grid">{tutorials.map((tutorial) => <TutorialCard key={tutorial.slug} tutorial={tutorial}/>)}</div></section>}
 
     <section className="page-container section-block newsletter-panel"><div><span className="eyebrow">STAY IN THE LOOP</span><h2>Follow the journey.</h2><p>Occasional notes about new projects, technical lessons and releases.</p></div><NewsletterForm/></section>
   </>;

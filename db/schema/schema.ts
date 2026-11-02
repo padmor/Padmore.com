@@ -7,6 +7,7 @@ import { sql } from "drizzle-orm"
 export const user = pgSchema("neon_auth").table("user", { id: uuid().primaryKey() });
 
 export const projects = pgTable("projects", {
+	imageId: uuid("image_id"),
 	id: uuid().defaultRandom().primaryKey().notNull(),
 	title: text().notNull(),
 	slug: text().notNull(),
@@ -60,6 +61,7 @@ export const achievements = pgTable("achievements", {
 	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 	icon: text(),
+	imageId: uuid("image_id"),
 }, (table) => [
 	index("achievements_media_idx").using("btree", table.mediaAssetId.asc().nullsLast().op("uuid_ops")),
 	foreignKey({
@@ -709,6 +711,7 @@ export const posts = pgTable("posts", {
 	slug: text().notNull(),
 	excerpt: text(),
 	contentJson: jsonb("content_json").default({}).notNull(),
+	imageId: uuid("image_id"),
 	searchText: text("search_text").default('').notNull(),
 	contentType: text("content_type").notNull(),
 	status: text().default('draft').notNull(),
@@ -847,6 +850,10 @@ export const products = pgTable("products", {
 	createdBy: uuid("created_by"),
 	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	category: text(),
+	artwork: text().default('toolkit').notNull(),
+	imageId: uuid("image_id"),
+	license: text(),
 }, (table) => [
 	index("products_created_by_idx").using("btree", table.createdBy.asc().nullsLast().op("uuid_ops")),
 	index("products_status_type_idx").using("btree", table.status.asc().nullsLast().op("text_ops"), table.productType.asc().nullsLast().op("text_ops")),
@@ -922,6 +929,22 @@ export const productPlans = pgTable("product_plans", {
 	check("product_plans_billing_interval_check", sql`billing_interval = ANY (ARRAY['month'::text, 'year'::text])`),
 	check("product_plans_currency_check", sql`currency ~ '^[A-Z]{3}$'::text`),
 	check("product_plans_price_amount_minor_check", sql`price_amount_minor >= 0`),
+]);
+
+export const opportunities = pgTable("opportunities", {
+	imageId: uuid("image_id"),
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	title: text().notNull(),
+	description: text().notNull(),
+	area: text(),
+	commitment: text(),
+	arrangement: text(),
+	isOpen: boolean("is_open").default(false).notNull(),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+}, () => [
+	pgPolicy("opportunities_public_read", { as: "permissive", for: "select", to: ["anonymous", "app_server", "authenticated"], using: sql`(is_open = true)` }),
+	pgPolicy("opportunities_admin_manage", { as: "permissive", for: "all", to: ["authenticated"], using: sql`app_private.can_manage_content()`, withCheck: sql`app_private.can_manage_content()` }),
 ]);
 
 export const siteSettings = pgTable("site_settings", {

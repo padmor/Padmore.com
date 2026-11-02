@@ -11,6 +11,8 @@
     "test:e2e": "node --no-warnings tests/auth-e2e.mjs",
     "test:portfolio": "node --no-warnings tests/portfolio-e2e.mjs",
     "test:forms": "node --no-warnings tests/forms-browser.mjs",
+    "test:admin": "node --no-warnings tests/admin-browser.mjs",
+    "test:content": "node --no-warnings tests/content-browser.mjs",
     "test": "vitest run",
     "db:migrate": "node --no-warnings scripts/db-migrate.mjs",
     "db:seed": "node --no-warnings db/seed.ts",

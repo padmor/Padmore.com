@@ -1,14 +1,13 @@
+import { SiteImage } from "@/features/content/components/site-image";
 import { Icon } from "@/components/icon";
+import { ArticleBody } from "@/features/content/components/article-body";
+import { listPublicUpdates } from "@/modules/content/repository";
 
-const updates = [
-  { type: "Project update", title: "Portfolio foundation", text: "Planning a modular portfolio with responsive layouts and clear interaction patterns.", date: "Planning note" },
-  { type: "Learning note", title: "Modern CSS and responsive design", text: "Exploring fluid layouts, container queries and accessible component states.", date: "Learning journey" },
-  { type: "Build log", title: "A better development workflow", text: "Documenting architecture, code quality and performance decisions.", date: "Planning note" },
-];
-
-export function UpdateFeed() {
-  return <div className="updates-feed">{updates.map((item) => <article className="update-card" key={item.title}>
-    <span className="update-type">{item.type}</span><h2>{item.title}</h2><p>{item.text}</p>
-    <div className="update-meta"><span><Icon name="clock" size={14}/> {item.date}</span><span>Preview content</span></div>
+export async function UpdateFeed() {
+  const updates = await listPublicUpdates();
+  if (!updates.length) return <div className="empty-state"><Icon name="clock"/><h3>No updates yet</h3><p>New notes from the work will appear here.</p></div>;
+  return <div className="updates-feed">{updates.map((item) => <article className="update-card" key={item.slug}>
+    {item.imageId && <SiteImage id={item.imageId}/>}<span className="update-type">{item.type}</span><h2>{item.title}</h2><ArticleBody text={item.text}/>
+    <div className="update-meta"><span><Icon name="clock" size={14}/> {item.date}</span></div>
   </article>)}</div>;
 }

@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { products, formatPrice, type Product } from "@/lib/data";
+import { formatPrice, type Product } from "@/lib/data";
 import { useCart } from "@/features/store/providers/cart-provider";
 import { useState } from "react";
+import { SiteImage } from "@/features/content/components/site-image";
 import { Icon } from "@/components/icon";
 
 export function ProductArtwork({ visual }: { visual: Product["visual"] }) {
@@ -18,14 +19,15 @@ export function AddToCartButton({ product }: { product: Product }) {
   return <button type="button" className={`button ${added ? "button-success" : "button-primary"} button-small`} onClick={handleAdd}>{added ? <><Icon name="check" size={14}/> Added</> : "Add to cart"}</button>;
 }
 
-export function ProductCatalog() {
+export function ProductCatalog({ products }: { products: Product[] }) {
   const [filter, setFilter] = useState("All");
   const [query, setQuery] = useState("");
-  const categories = ["All", "Templates", "Tools", "Courses", "Graphics"];
+  const categories = ["All", ...new Set(products.map((product) => product.category))];
+  if (!products.length) return <div className="empty-state"><span className="empty-icon"><Icon name="store" size={26}/></span><h3>The store is opening soon</h3><p>Products will appear here as soon as they're published.</p></div>;
   const filtered = products.filter((product) => (filter === "All" || product.category === filter) && `${product.title} ${product.description}`.toLowerCase().includes(query.toLowerCase()));
   return <>
     <div className="catalog-toolbar"><label className="search-box"><Icon name="search"/><input placeholder="Search products..." value={query} onChange={(event) => setQuery(event.target.value)}/></label><div className="filter-pills">{categories.map((category) => <button key={category} className={filter === category ? "filter-pill active" : "filter-pill"} onClick={() => setFilter(category)}>{category}</button>)}</div></div>
-    {filtered.length ? <div className="product-grid">{filtered.map((product) => <article className="product-card" key={product.slug}><Link href={`/store/${product.slug}`}><ProductArtwork visual={product.visual}/></Link><div className="product-info"><span className="eyebrow">{product.category}</span><h3><Link href={`/store/${product.slug}`}>{product.title}</Link></h3><p>{product.description}</p><div className="product-buy-row"><strong>{formatPrice(product.price)}</strong><AddToCartButton product={product}/></div></div></article>)}</div> : <div className="empty-state"><h3>No products found</h3><p>Try another search or category.</p></div>}
+    {filtered.length ? <div className="product-grid">{filtered.map((product) => <article className="product-card" key={product.slug}><Link href={`/store/${product.slug}`}>{product.imageId ? <SiteImage id={product.imageId}/> : <ProductArtwork visual={product.visual}/>}</Link><div className="product-info"><span className="eyebrow">{product.category}</span><h3><Link href={`/store/${product.slug}`}>{product.title}</Link></h3><p>{product.description}</p><div className="product-buy-row"><strong>{formatPrice(product.price)}</strong><AddToCartButton product={product}/></div></div></article>)}</div> : <div className="empty-state"><h3>No products found</h3><p>Try another search or category.</p></div>}
   </>;
 }
 
