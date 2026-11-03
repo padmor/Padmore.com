@@ -24,7 +24,7 @@ export async function requireUser() {
 // client, so removing a role takes effect immediately.
 // A failed lookup is an error rather than "no roles": staff would otherwise get
 // a false not-found page. It still fails closed, since the error stops the page.
-export const getCurrentRoles = cache(async (): Promise<Role[]> => {
+async function fetchRoles(): Promise<Role[]> {
   for (let attempt = 1; attempt <= 2; attempt++) {
     const response = await userDataApi("user_roles?select=role");
     if (response?.ok) {
@@ -34,19 +34,28 @@ export const getCurrentRoles = cache(async (): Promise<Role[]> => {
     console.error(`Role lookup failed: ${response?.status ?? "no token"}, attempt ${attempt}`);
   }
   throw new Error("Role lookup failed");
-});
+}
+
+export const getCurrentRoles = cache(fetchRoles);
 
 // Shows the not-found page rather than a 403, so private areas do not reveal that
 // they exist. The root loading.tsx streams, so the HTTP status can still be 200,
 // but this runs before anything private is rendered.
 export async function requireRole(allowed: readonly Role[]) {
   const user = await requireUser();
-  const roles = await getCurrentRoles();
+  let roles = await getCurrentRoles();
   if (!roles.some((role) => allowed.includes(role))) {
     // A token for another or expired session makes the database see no roles.
     // That is a stale sign-in rather than a missing permission, so ask to sign in again.
     if (await tokenIsStale(user.id)) redirect("/signin");
-    notFound();
+    // The Data API has now and then answered a valid staff token with no roles.
+    // Asking again before the not-found page stops staff being shut out by that.
+    for (let attempt = 1; attempt <= 2 && !roles.some((role) => allowed.includes(role)); attempt++) {
+      await new Promise((resolve) => setTimeout(resolve, 500 * attempt));
+      roles = await fetchRoles();
+      if (roles.length) console.warn(`Role lookup returned no roles, then found them on retry ${attempt}`);
+    }
+    if (!roles.some((role) => allowed.includes(role))) notFound();
   }
   return { user, roles };
 }
