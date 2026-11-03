@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { createNeonAuth } from "@neondatabase/auth/next/server";
 import { env } from "@/lib/environment/server";
 
@@ -11,8 +12,9 @@ const sessionAuth = auth as unknown as {
   token(): Promise<{ data: { token?: string } | null }>;
 };
 
-// Asks Neon Auth, so this returns null as soon as a session is revoked.
-export async function getSessionToken(): Promise<string | null> {
+// Asks Neon Auth, so this returns null as soon as a session is revoked. Once per
+// request: repeat calls add delay, and one timing out made a valid user look signed out.
+export const getSessionToken = cache(async (): Promise<string | null> => {
   const { data } = await sessionAuth.token();
   return data?.token ?? null;
-}
+});

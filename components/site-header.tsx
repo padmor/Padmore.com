@@ -7,6 +7,7 @@ import { navItems } from "@/lib/data";
 import { Icon } from "@/components/icon";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useCart } from "@/features/store/providers/cart-provider";
+import { BrandMark } from "@/components/brand-mark";
 
 const moreLinks = [
   { label: "About me", href: "/about" },
@@ -29,7 +30,7 @@ export function SiteHeader() {
       <header className="site-header">
         <div className="header-inner">
           <Link href="/" className="brand" aria-label="Padmore Yeb homepage">
-            <span className="brand-mark">P</span>
+            <BrandMark/>
             <span>Padmore Yeb</span>
           </Link>
           <nav className="desktop-nav" aria-label="Main navigation">

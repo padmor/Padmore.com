@@ -1,6 +1,6 @@
 import type { SVGProps } from "react";
 
-type IconName = "home" | "grid" | "book" | "store" | "users" | "user" | "search" | "menu" | "close" | "sun" | "moon" | "arrow" | "arrow-up-right" | "chevron" | "heart" | "bookmark" | "clock" | "eye" | "message" | "plus" | "check" | "check-circle" | "mail" | "phone" | "map" | "github" | "linkedin" | "globe" | "folder" | "briefcase" | "layers" | "chart" | "settings" | "bell" | "upload" | "external" | "filter" | "code" | "sparkles" | "send" | "loader" | "alert" | "info" | "calendar" | "download" | "database" | "laptop" | "shield-check";
+type IconName = "home" | "grid" | "book" | "store" | "users" | "user" | "search" | "menu" | "close" | "sun" | "moon" | "arrow" | "arrow-up-right" | "chevron" | "heart" | "bookmark" | "clock" | "eye" | "message" | "plus" | "check" | "check-circle" | "mail" | "phone" | "map" | "github" | "linkedin" | "globe" | "folder" | "briefcase" | "layers" | "chart" | "settings" | "bell" | "upload" | "external" | "filter" | "code" | "sparkles" | "send" | "loader" | "alert" | "info" | "calendar" | "download" | "database" | "laptop" | "shield-check" | "copy";
 
 const paths: Record<IconName, string> = {
   home: "M3 10.5 12 3l9 7.5V21h-6v-6H9v6H3z",
@@ -51,6 +51,7 @@ const paths: Record<IconName, string> = {
   database: "M12 3c5 0 9 1.3 9 3s-4 3-9 3-9-1.3-9-3 4-3 9-3Zm-9 3v6c0 1.7 4 3 9 3s9-1.3 9-3V6m-18 6v6c0 1.7 4 3 9 3s9-1.3 9-3v-6",
   laptop: "M4 5h16v11H4zM2 19h20",
   "shield-check": "M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Zm-4-11 3 3 5-6",
+  copy: "M9 9h11v11H9zM5 15H4V4h11v1",
 };
 
 export function Icon({ name, size = 18, className, ...props }: SVGProps<SVGSVGElement> & { name: IconName; size?: number }) {

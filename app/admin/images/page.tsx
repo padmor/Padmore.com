@@ -31,6 +31,7 @@ export default async function AttachedImagesPage() {
   ]);
   const usage = new Map(groups.flat());
   if (about?.photo_id) usage.set(about.photo_id, { label: "About me", title: "Profile image", href: "/admin/about" });
+  if (about?.hero_photo_id) usage.set(about.hero_photo_id, { label: "Home page", title: "Another picture of you", href: "/admin/about" });
 
   return <>
     <div className="admin-title-row"><div><span className="eyebrow">MEDIA</span><h1>Attached images</h1><p>{images.length} {images.length === 1 ? "image" : "images"}. To attach one, open the item it belongs to.</p></div></div>

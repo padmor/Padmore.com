@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import { MAX_IMAGE_BYTES } from "@/modules/admin/image-type";
 
 /* eslint-disable @next/next/no-img-element */
-export function ImageField({ label = "Image", currentId }: { label?: string; currentId?: string | null }) {
+export function ImageField({ name = "image", label = "Image", currentId }: { name?: string; label?: string; currentId?: string | null }) {
+  const inputId = `content-${name}`;
   const [error, setError] = useState("");
   const [preview, setPreview] = useState<string | null>(null);
 
@@ -16,15 +17,15 @@ export function ImageField({ label = "Image", currentId }: { label?: string; cur
       <div>
         <strong>Attached</strong>
         <a className="text-link" href={`/media/${currentId}`} target="_blank" rel="noopener noreferrer">View full size</a>
-        <label><input type="checkbox" name="remove_image"/> Remove this image</label>
+        <label><input type="checkbox" name={`remove_${name}`}/> Remove this image</label>
       </div>
     </div>}
     {preview && <div className="admin-image-current">
       <img src={preview} alt="Preview of the chosen file"/>
       <div><strong>Ready to attach</strong><small>Saved when you save this form.</small></div>
     </div>}
-    <label className="button button-outline button-small admin-attach" htmlFor="content-image">{currentId || preview ? "Attach a different image" : "Attach image"}</label>
-    <input id="content-image" className="sr-only" name="image" type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => {
+    <label className="button button-outline button-small admin-attach" htmlFor={inputId}>{currentId || preview ? "Attach a different image" : "Attach image"}</label>
+    <input id={inputId} className="sr-only" name={name} type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => {
       const file = event.target.files?.[0];
       const tooBig = (file?.size ?? 0) > MAX_IMAGE_BYTES;
       setError(tooBig ? "That image is over 2 MB. Please choose a smaller one." : "");

@@ -4,7 +4,13 @@ import type { AboutContent } from "@/modules/admin/collections";
 export const DEFAULT_ABOUT: AboutContent = {
   headline: "Curious about technology. Focused on useful solutions.",
   intro: "I'm Padmore Yeb. I enjoy learning, building digital products and turning practical problems into useful software.",
-  bio: "I want this space to show the projects I'm working on, the skills I'm developing, the lessons I'm learning and the people I hope to build with.",
+  bio: [
+    "I'm Padmore Yeb, a developer based in Ghana who builds web products end to end, from the database and server through to the interface people actually use. I care about software that solves a real problem, holds up under daily use and is clear enough for the next person to maintain.",
+    "My work spans full-stack web development: designing data models, writing secure server logic, connecting authentication and building responsive, accessible interfaces. This site is an example. I designed and built it myself, including the manager portal that runs its projects, tutorials, store and updates.",
+    "I approach every project the same way. I start by understanding the problem, keep the structure simple, and test the result before calling it done. Clean code, sensible security and attention to detail matter to me as much as the features themselves.",
+    "Learning is a constant part of how I work. I study new tools and techniques, take on projects that stretch my skills, and write tutorials so others can learn from what I've figured out along the way.",
+    "I'm open to collaborations, freelance projects and opportunities to join teams building meaningful products. If you have an idea, a problem to solve or a role to fill, I'd be glad to hear from you.",
+  ].join("\n\n"),
   location: "Ghana",
   skills: [],
 };

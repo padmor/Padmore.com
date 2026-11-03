@@ -26,7 +26,7 @@ export function WatchExperience() {
         <div className="watch-brand"><span className="watch-mark">P</span><span>PADMORE</span></div>
         <div className="watch-divider" />
         <span className="watch-eyebrow">PERSONAL PORTFOLIO</span>
-        <h1>{title}</h1>
+        <p className="watch-title">{title}</p>
         <p>{hint}</p>
         <span className="watch-current"><i /> Building and learning</span>
         <nav className="watch-actions" aria-label="Quick links">

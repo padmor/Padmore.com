@@ -3,9 +3,12 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { WatchExperience } from "@/components/watch-experience";
 import { CartProvider } from "@/features/store/providers/cart-provider";
+import { env } from "@/lib/environment/server";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  // Makes link previews (WhatsApp, LinkedIn, X) use full addresses on the live site.
+  metadataBase: new URL(env.APP_URL),
   title: { default: "Padmore Yeb — Developer Portfolio", template: "%s | Padmore Yeb" },
   description: "Explore Padmore Yeb's software projects, tutorials, development journey and collaboration opportunities.",
   applicationName: "Padmore Yeb Portfolio",

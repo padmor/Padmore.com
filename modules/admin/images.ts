@@ -10,8 +10,8 @@ import { SaveError } from "./save-error";
 // What a save should do to the image: nothing (empty), replace it, or remove it.
 export type ImageChange = { image_id?: string | null };
 
-export async function readImageChange(formData: FormData, userId: string): Promise<ImageChange> {
-  const file = formData.get("image");
+export async function readImageChange(formData: FormData, userId: string, field = "image"): Promise<ImageChange> {
+  const file = formData.get(field);
   if (file instanceof File && file.size > 0) {
     if (file.size > MAX_IMAGE_BYTES) throw new SaveError("Images can be up to 2 MB.");
     const bytes = Buffer.from(await file.arrayBuffer());
@@ -28,7 +28,7 @@ export async function readImageChange(formData: FormData, userId: string): Promi
       throw new SaveError("The image couldn't be saved. Please try again.");
     }
   }
-  return formData.get("remove_image") === "on" ? { image_id: null } : {};
+  return formData.get(`remove_${field}`) === "on" ? { image_id: null } : {};
 }
 
 // Failing to tidy up leaves an unused image behind and shouldn't fail the save.
@@ -45,8 +45,8 @@ export async function listImages() {
 }
 
 // Runs a save with the image attached, and leaves only the image that ended up in use.
-export async function withImage<T>(formData: FormData, userId: string, currentId: unknown, save: (change: ImageChange) => Promise<T>): Promise<T> {
-  const change = await readImageChange(formData, userId);
+export async function withImage<T>(formData: FormData, userId: string, currentId: unknown, save: (change: ImageChange) => Promise<T>, field = "image"): Promise<T> {
+  const change = await readImageChange(formData, userId, field);
   try {
     const result = await save(change);
     if ("image_id" in change) await discardImage(currentId);

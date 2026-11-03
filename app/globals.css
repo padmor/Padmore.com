@@ -390,7 +390,7 @@ img { max-width: 100%; height: auto; }
   .watch-mark { display: grid; place-items: center; width: 17px; height: 17px; border-radius: 6px; background: linear-gradient(140deg,var(--primary),var(--violet)); color: white; font-size: 10px; }
   .watch-divider { width: 45%; height: 1px; background: var(--border-strong); }
   .watch-eyebrow { color: var(--primary); font-size: 5px; font-weight: 850; letter-spacing: .16em; }
-  .watch-face h1 { max-width: 100%; margin: 0; color: var(--text); font-size: 12px; line-height: 1.12; letter-spacing: -.04em; }
+  .watch-face .watch-title { max-width: 100%; margin: 0; font-weight: 800; color: var(--text); font-size: 12px; line-height: 1.12; letter-spacing: -.04em; }
   .watch-face p { margin: 0; color: var(--muted); font-size: 7px; }
   .watch-current { display: inline-flex; align-items: center; gap: 4px; color: var(--text-soft); font-size: 6px; }
   .watch-current i { width: 5px; height: 5px; border-radius: 50%; background: var(--success); }
@@ -440,3 +440,70 @@ img { max-width: 100%; height: auto; }
 .admin-gallery-item img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
 .admin-gallery-item > div { display: grid; gap: 4px; padding: 10px 12px; font-size: 14px; }
 .admin-gallery-item small { color: var(--muted); font-size: 12px; }
+.hero-slide { position: absolute; inset: 0; opacity: 0; transition: opacity .9s ease; }
+.hero-slide.is-active { opacity: 1; }
+.hero-slide-second .site-image { width: 100%; height: 100%; aspect-ratio: auto; border-radius: 0; object-position: 50% 24%; }
+/* The video is landscape with its own captions in the top-left corner. A small
+   zoom from the bottom keeps the captions out of the arch. */
+.hero-video { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 42% 100%; transform: scale(1.18); transform-origin: 42% 100%; background: #f3efe9; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide { transition: none; }
+}
+/* The slideshow fills the whole hero card; the floating cards stay on top. */
+.hero-photo-frame { inset: 0; width: 100%; height: 100%; border-radius: inherit; box-shadow: none; }
+/* Highlight cards under the hero: each icon on a solid theme colour. */
+.quick-stats .stat-icon { color: #fff; box-shadow: 0 8px 18px rgba(65,105,245,.22); }
+.quick-stats .stat-card:nth-child(1) .stat-icon { background: var(--primary); }
+.quick-stats .stat-card:nth-child(2) .stat-icon { background: var(--violet); box-shadow: 0 8px 18px rgba(128,88,237,.24); }
+.quick-stats .stat-card:nth-child(3) .stat-icon { background: var(--cyan); box-shadow: 0 8px 18px rgba(53,188,210,.26); }
+.quick-stats .stat-card:nth-child(4) .stat-icon { background: linear-gradient(140deg, var(--primary), var(--violet)); }
+/* Hero tabs: the original introduction first, then more about Padmore in the same space. */
+.hero-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
+.hero-tab { padding: 6px 13px; border: 1px solid var(--border); border-radius: 99px; background: var(--surface); color: var(--muted); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; transition: color .2s, background .2s, border-color .2s; }
+.hero-tab:hover { color: var(--primary); border-color: var(--primary); }
+.hero-tab.active { color: #fff; border-color: var(--primary); background: var(--primary); }
+.hero-panel { min-height: 330px; animation: hero-panel-in .35s ease; }
+.hero-panel-title { margin: 8px 0 12px; color: var(--text); font-size: clamp(24px, 2.6vw, 34px); line-height: 1.15; letter-spacing: -.035em; }
+.hero-panel-text { max-height: 190px; overflow-y: auto; margin-bottom: 14px; padding-right: 6px; color: var(--text-soft); font-size: 16px; line-height: 1.7; }
+.hero-panel-text p { margin: 0 0 10px; }
+.hero-panel-label { margin: 18px 0 8px; color: var(--muted); font-size: 13px; font-weight: 750; }
+.hero-school-list { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; font-size: 16px; font-weight: 600; color: var(--text); }
+.hero-school-list li { display: flex; align-items: center; gap: 12px; }
+.hero-school-icon { display: grid; place-items: center; flex: 0 0 auto; width: 34px; height: 34px; border-radius: 10px; color: #fff; background: var(--violet); }
+.hero-photo-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; max-width: 520px; }
+.hero-photo-grid .site-image { aspect-ratio: 4 / 5; border-radius: 16px; box-shadow: var(--shadow-md); }
+@keyframes hero-panel-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .hero-panel { animation: none; } }
+
+/* Value cards: each icon on a solid theme colour. */
+.value-card .value-icon { color: #fff; background: var(--primary); box-shadow: 0 8px 18px rgba(65,105,245,.22); }
+.value-card:nth-child(2) .value-icon { color: #fff; background: var(--violet); box-shadow: 0 8px 18px rgba(128,88,237,.24); }
+.value-card:nth-child(3) .value-icon { color: #fff; background: var(--cyan); box-shadow: 0 8px 18px rgba(53,188,210,.26); }
+.value-card:nth-child(4) .value-icon { color: #fff; background: #f0884a; box-shadow: 0 8px 18px rgba(240,136,74,.26); }
+/* Sign-in picture: fills the space under the welcome text. */
+.auth-aside:has(.auth-photo) { display: flex; flex-direction: column; }
+.auth-photo { position: relative; flex: 1; min-height: 260px; margin-top: 26px; overflow: hidden; border-radius: 20px; box-shadow: var(--shadow-md); }
+.auth-photo img { object-fit: cover; object-position: 45% 50%; }
+@media (max-width: 900px) { .auth-photo { flex: none; aspect-ratio: 16 / 9; min-height: 0; margin-top: 18px; } .auth-aside:has(.auth-photo) h1, .auth-aside:has(.auth-photo) p { max-width: none; } }
+/* Logo: a small round profile photo in place of the "P" letter. */
+.brand-mark { overflow: hidden; padding: 0; border-radius: 50% !important; background: linear-gradient(140deg, var(--primary), var(--violet)); box-shadow: 0 0 0 2px var(--surface), 0 0 0 3px rgba(65,105,245,.35), 0 5px 12px rgba(65,105,245,.23); }
+.brand-mark img { display: block; width: 100%; height: 100%; object-fit: cover; }
+/* Contact me pop-up: the contact links from the manager portal. */
+.contact-modal { width: min(460px, calc(100% - 28px)); max-height: calc(100dvh - 40px); padding: 0; border: 1px solid var(--border); border-radius: 22px; color: var(--text); background: var(--surface); box-shadow: 0 30px 80px rgba(15,23,42,.28); }
+.contact-modal[open] { animation: contact-modal-in .22s ease; }
+.contact-modal::backdrop { background: rgba(15,23,42,.45); backdrop-filter: blur(3px); }
+.contact-modal-inner { padding: 24px; }
+.contact-modal-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+.contact-modal-head h2 { margin: 6px 0 0; font-size: 24px; letter-spacing: -.03em; }
+.contact-modal-list { display: grid; gap: 8px; margin: 0 0 18px; padding: 0; list-style: none; }
+.contact-modal-list li { display: flex; align-items: center; gap: 8px; padding: 6px 6px 6px 8px; border: 1px solid var(--border); border-radius: 14px; transition: border-color .2s, background .2s; }
+.contact-modal-list li:hover { border-color: var(--primary); background: var(--surface-soft, rgba(65,105,245,.04)); }
+.contact-modal-list a { display: flex; flex: 1; min-width: 0; align-items: center; gap: 12px; color: inherit; text-decoration: none; }
+.contact-modal-icon { display: grid; flex: 0 0 auto; place-items: center; width: 38px; height: 38px; border-radius: 11px; color: #fff; background: var(--primary); }
+.contact-modal-text { display: grid; min-width: 0; }
+.contact-modal-text strong { font-size: 15px; }
+.contact-modal-text small { overflow: hidden; color: var(--muted); font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
+.contact-modal-empty { margin: 0 0 18px; color: var(--muted); }
+.contact-modal-cta { width: 100%; justify-content: center; }
+@keyframes contact-modal-in { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .contact-modal[open] { animation: none; } }

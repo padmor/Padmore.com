@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Icon } from "@/components/icon";
 import { requireRole } from "@/lib/auth/session";
 import { COLLECTIONS } from "@/modules/admin/collections";
+import { BrandMark } from "@/components/brand-mark";
 
 // Layouts don't re-run on every navigation, so each page also checks the role.
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -12,7 +13,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   return <section className="page-container content-page admin-page">
     <div className="admin-layout">
       <aside className="admin-sidebar">
-        <div className="admin-sidebar-brand"><span className="brand-mark">P</span><strong>Manager portal</strong></div>
+        <div className="admin-sidebar-brand"><BrandMark/><strong>Manager portal</strong></div>
         <Link href="/admin"><Icon name="home"/>Dashboard</Link>
         {canEdit && <Link href="/admin/projects"><Icon name="grid"/>Projects</Link>}
         {sections.map(([key, section]) => <Link key={key} href={`/admin/${key}`}><Icon name={section.icon}/>{section.label}</Link>)}

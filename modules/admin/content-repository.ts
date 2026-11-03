@@ -55,13 +55,13 @@ const MAPPINGS: Record<CollectionKey, Mapping> = {
         values: { title: row.title, slug: row.slug, excerpt: row.excerpt, status: row.status, image_id: row.image_id, ...json },
       };
     },
-    toRow: ({ title, slug, excerpt, status, body, category, level, minutes, artwork, video_url }, userId, current) => ({
+    toRow: ({ title, slug, excerpt, status, body, category, level, minutes, video_url }, userId, current) => ({
       title,
       slug,
       excerpt,
       status,
       content_type: "tutorial",
-      content_json: { body, category, level, minutes, artwork, video_url },
+      content_json: { body, category, level, minutes, video_url },
       search_text: `${category} ${body}`.slice(0, 50000),
       published_at: publishedAt(status, current),
       ...(current ? {} : { author_id: userId }),
@@ -208,13 +208,14 @@ export async function getAboutForEditing(): Promise<AboutContent | null> {
 
 export async function saveAbout(content: AboutContent, userId: string, formData: FormData) {
   const current = await getAboutForEditing();
-  await withImage(formData, userId, current?.photo_id, async (image) => {
+  await withImage(formData, userId, current?.photo_id, (image) => withImage(formData, userId, current?.hero_photo_id, async (second) => {
     const photo_id = "image_id" in image ? image.image_id : (current?.photo_id ?? null);
+    const hero_photo_id = "image_id" in second ? second.image_id : (current?.hero_photo_id ?? null);
     const response = await userDataApi("site_settings?on_conflict=setting_key", {
       method: "POST",
       headers: { Prefer: "resolution=merge-duplicates" },
-      body: JSON.stringify({ setting_key: "about", setting_value: { ...content, photo_id }, is_public: true, updated_by: userId }),
+      body: JSON.stringify({ setting_key: "about", setting_value: { ...content, photo_id, hero_photo_id }, is_public: true, updated_by: userId }),
     });
     if (!response?.ok) throw await failure(response);
-  });
+  }, "hero_image"));
 }

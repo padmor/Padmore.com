@@ -1,12 +1,15 @@
 import Link from "next/link";
-import { Portrait } from "@/features/content/components/site-image";
-import { getAbout, listPublicTutorials } from "@/modules/content/repository";
+import { HeroSlideshow } from "@/features/home/components/hero-slideshow";
+import { HeroIntro } from "@/features/home/components/hero-intro";
+import { getAbout, listPublicTutorials, listSocialLinks } from "@/modules/content/repository";
 import { listPublicProjects } from "@/modules/portfolio/repository";
 import { ProjectCard } from "@/features/projects/components/project-card";
 import { TutorialCard } from "@/features/tutorials/components/tutorial-card";
 import { SectionHeading } from "@/components/page-intro";
 import { Icon } from "@/components/icon";
 import { NewsletterForm } from "@/features/contact/components/newsletter-form";
+import { ContactModal } from "@/features/contact/components/contact-modal";
+import { contactLinks } from "@/features/contact/platforms";
 
 const values = [
   { icon: "code" as const, title: "Clean code", text: "Readable, maintainable foundations that are easier to grow." },
@@ -18,21 +21,18 @@ const values = [
 export const revalidate = 300;
 
 export default async function HomePage() {
-  const [projects, tutorials, about] = await Promise.all([listPublicProjects(), listPublicTutorials(3), getAbout()]);
+  const [projects, tutorials, about, links] = await Promise.all([listPublicProjects(), listPublicTutorials(3), getAbout(), listSocialLinks().catch(() => [])]);
   return <>
     <section className="hero page-container">
-      <div className="hero-copy">
+      <HeroIntro about={{ headline: about.headline, bio: about.bio, education: about.education ?? [], interests: about.interests ?? [], skills: about.skills, photos: [about.photo_id, about.hero_photo_id].filter((id): id is string => Boolean(id)) }} intro={<>
         <h1>Hi, I&apos;m Padmore Yeb <span className="wave">👋</span><br/>I build modern web &amp; mobile applications that solve <em>real problems.</em></h1>
         <p className="hero-description">Developer <span>·</span> Creator <span>·</span> Problem solver</p>
-        <div className="hero-actions"><Link href="/projects" className="button button-primary">View my projects <Icon name="arrow" size={16}/></Link><Link href="/contact" className="button button-outline"><Icon name="mail" size={16}/> Contact me</Link></div>
+        <div className="hero-actions"><Link href="/projects" className="button button-primary">View my projects <Icon name="arrow" size={16}/></Link><ContactModal links={contactLinks(about, links)}/></div>
         <div className="hero-proof"><span><Icon name="check-circle" size={15}/> Open to collaboration</span><span><Icon name="globe" size={15}/> Building for the web</span></div>
-      </div>
+      </>}/>
       <div className="hero-visual">
         <div className="hero-orbit hero-orbit-one"/><div className="hero-orbit hero-orbit-two"/><div className="hero-gradient-shape"/>
-        <div className="hero-photo-frame"><Portrait photoId={about.photo_id} priority sizes="(max-width: 700px) 70vw, 420px" className="hero-photo"/></div>
-        <div className="hero-float-card availability-card"><span className="availability-check"><Icon name="check" size={13}/></span><span><strong>Build something meaningful</strong><small>Ideas · Projects · Collaboration</small></span></div>
-        <div className="hero-float-card code-card"><span className="code-card-mark">&lt;/&gt;</span><span><strong>Always learning</strong><small>From idea to implementation</small></span></div>
-        <span className="hero-mini-tag">Full-stack thinking</span>
+        <div className="hero-photo-frame"><HeroSlideshow/></div>
       </div>
     </section>
 

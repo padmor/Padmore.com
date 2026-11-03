@@ -41,7 +41,6 @@ export const projectSchema = z
     description: optional(z.string().trim().max(20000)),
     project_type: optional(z.string().trim().max(80)),
     category: z.string().trim().min(1, "Choose a category.").max(80, "Keep the category under 80 characters."),
-    artwork: z.enum(ARTWORK_OPTIONS),
     lifecycle_status: z.enum(LIFECYCLE_OPTIONS.map(([value]) => value) as [string, ...string[]]),
     visibility: z.enum(["draft", "public", "private"]),
     is_featured: z.preprocess((value) => value === "on", z.boolean()),

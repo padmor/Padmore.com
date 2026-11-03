@@ -4,13 +4,8 @@ import Link from "next/link";
 import { formatPrice, type Product } from "@/lib/data";
 import { useCart } from "@/features/store/providers/cart-provider";
 import { useState } from "react";
-import { SiteImage } from "@/features/content/components/site-image";
+import { CoverImage } from "@/features/content/components/site-image";
 import { Icon } from "@/components/icon";
-
-export function ProductArtwork({ visual }: { visual: Product["visual"] }) {
-  const symbols = { design: "✦", toolkit: "⌘", react: "⚛", bundle: "✧" };
-  return <div className={`product-art product-${visual}`} aria-hidden="true"><span className="product-art-glow"/><strong>{symbols[visual]}</strong><i/><i/></div>;
-}
 
 export function AddToCartButton({ product }: { product: Product }) {
   const { add } = useCart();
@@ -27,7 +22,7 @@ export function ProductCatalog({ products }: { products: Product[] }) {
   const filtered = products.filter((product) => (filter === "All" || product.category === filter) && `${product.title} ${product.description}`.toLowerCase().includes(query.toLowerCase()));
   return <>
     <div className="catalog-toolbar"><label className="search-box"><Icon name="search"/><input placeholder="Search products..." value={query} onChange={(event) => setQuery(event.target.value)}/></label><div className="filter-pills">{categories.map((category) => <button key={category} className={filter === category ? "filter-pill active" : "filter-pill"} onClick={() => setFilter(category)}>{category}</button>)}</div></div>
-    {filtered.length ? <div className="product-grid">{filtered.map((product) => <article className="product-card" key={product.slug}><Link href={`/store/${product.slug}`}>{product.imageId ? <SiteImage id={product.imageId}/> : <ProductArtwork visual={product.visual}/>}</Link><div className="product-info"><span className="eyebrow">{product.category}</span><h3><Link href={`/store/${product.slug}`}>{product.title}</Link></h3><p>{product.description}</p><div className="product-buy-row"><strong>{formatPrice(product.price)}</strong><AddToCartButton product={product}/></div></div></article>)}</div> : <div className="empty-state"><h3>No products found</h3><p>Try another search or category.</p></div>}
+    {filtered.length ? <div className="product-grid">{filtered.map((product) => <article className="product-card" key={product.slug}><Link href={`/store/${product.slug}`}><CoverImage id={product.imageId}/></Link><div className="product-info"><span className="eyebrow">{product.category}</span><h3><Link href={`/store/${product.slug}`}>{product.title}</Link></h3><p>{product.description}</p><div className="product-buy-row"><strong>{formatPrice(product.price)}</strong><AddToCartButton product={product}/></div></div></article>)}</div> : <div className="empty-state"><h3>No products found</h3><p>Try another search or category.</p></div>}
   </>;
 }
 

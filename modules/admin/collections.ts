@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { PRODUCT_CATEGORIES, TUTORIAL_CATEGORIES } from "@/lib/data";
+import { PLATFORMS } from "@/features/contact/platforms";
 
 // What the manager portal can publish. Imported by the browser form as well as
 // the server, and the server validates again with the same schemas.
@@ -24,7 +25,7 @@ const optional = <T extends z.ZodType>(schema: T) =>
 const checkbox = z.preprocess((value) => value === "on", z.boolean());
 const title = z.string().trim().min(1, "Add a title.").max(150);
 const slug = z.string().trim().toLowerCase().max(120).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Use lowercase letters, numbers and single hyphens in the web address.");
-const contactUrl = z.url({ protocol: /^(https?|mailto)$/, error: "Enter a full link starting with https:// or mailto:" }).max(2048);
+const contactUrl = z.url({ protocol: /^(https?|mailto|tel)$/, error: "Enter a full link starting with https://, mailto: or tel:" }).max(2048);
 const webUrl = z.url({ protocol: /^https?$/, error: "Enter a full link starting with https://" }).max(2048);
 const choice = (message: string) => z.string().trim().min(1, message).max(80, "Keep that under 80 characters.");
 const body = z.string().trim().min(1, "Add the content.").max(100000);
@@ -36,15 +37,12 @@ const PUBLISH_OPTIONS = [["draft", "Draft (only staff can see it)"], ["published
 const BODY_NOTE = "Leave a blank line between paragraphs. Start a line with ## for a heading or - for a bullet.";
 
 const LEVELS = pair(["Beginner", "Intermediate", "Advanced"]);
-const TUTORIAL_ARTWORK = pair(["react", "css", "javascript", "node", "git", "api"]);
 const UPDATE_TYPES = [["project_update", "Project update"], ["development_log", "Build log"], ["announcement", "Announcement"], ["personal_thought", "Learning note"]] as const;
 const PRODUCT_TYPES = [["source_code", "Digital download"], ["service", "Service"]] as const;
-const PRODUCT_ARTWORK = pair(["design", "toolkit", "react", "bundle"]);
 const LICENSES = pair(["Personal use", "Personal and commercial use", "Single developer license", "Team license", "Individual learning license"]);
 const ACHIEVEMENT_ICONS = [["🏆", "🏆 Award"], ["🎓", "🎓 Education"], ["📜", "📜 Certificate"], ["🥇", "🥇 First place"], ["🚀", "🚀 Launch"], ["💡", "💡 Idea"], ["⭐", "⭐ Milestone"]] as const;
 const OPPORTUNITY_AREAS = pair(["Web Apps", "Mobile Apps", "Product Design", "Backend Systems", "Content", "Marketing"]);
 const COMMITMENTS = pair(["Full-time", "Part-time", "Flexible", "Project-based"]);
-const PLATFORMS = [["github", "GitHub"], ["linkedin", "LinkedIn"], ["email", "Email"], ["website", "Website"], ["other", "Other link"]] as const;
 const ARRANGEMENTS = pair(["Remote", "On-site", "Hybrid", "Discuss together"]);
 
 export const COLLECTIONS = {
@@ -64,7 +62,6 @@ export const COLLECTIONS = {
       category: choice("Choose a topic."),
       level: choice("Choose a level."),
       minutes: z.coerce.number({ error: "Enter the reading time in minutes." }).int("Enter the reading time in whole minutes.").min(1, "Enter the reading time in minutes.").max(1000),
-      artwork: z.enum(values(TUTORIAL_ARTWORK)),
       video_url: optional(webUrl),
       status: z.enum(values(PUBLISH_OPTIONS)),
     }),
@@ -76,7 +73,6 @@ export const COLLECTIONS = {
       { name: "category", label: "Topic", kind: "select", other: true, options: pair(TUTORIAL_CATEGORIES) },
       { name: "level", label: "Level", kind: "select", other: true, options: LEVELS },
       { name: "minutes", label: "Reading time in minutes", kind: "number", required: true },
-      { name: "artwork", label: "Card artwork", kind: "select", options: TUTORIAL_ARTWORK },
       { name: "video_url", label: "Video link", kind: "url", optional: true, placeholder: "https://" },
       { name: "image_id", label: "Cover image", kind: "image" },
       { name: "status", label: "Who can see it", kind: "select", options: PUBLISH_OPTIONS },
@@ -150,7 +146,6 @@ export const COLLECTIONS = {
       product_type: z.enum(values(PRODUCT_TYPES)),
       price: z.coerce.number({ error: "Enter a price, or 0 if it's free." }).min(0, "The price can't be negative.").max(10_000_000).multipleOf(0.01, "Use at most two decimal places."),
       license: optional(z.string().trim().max(200)),
-      artwork: z.enum(values(PRODUCT_ARTWORK)),
       status: z.enum(values(PUBLISH_OPTIONS)),
     }),
     fields: [
@@ -161,7 +156,6 @@ export const COLLECTIONS = {
       { name: "product_type", label: "Type", kind: "select", options: PRODUCT_TYPES },
       { name: "price", label: "Price in GHS", kind: "number", required: true, note: "Enter 0 for a free product." },
       { name: "license", label: "License", kind: "select", optional: true, other: true, options: LICENSES },
-      { name: "artwork", label: "Card artwork", kind: "select", options: PRODUCT_ARTWORK },
       { name: "image_id", label: "Cover image", kind: "image" },
       { name: "status", label: "Who can see it", kind: "select", options: PUBLISH_OPTIONS },
     ] as Field[],
@@ -195,7 +189,7 @@ export const COLLECTIONS = {
   links: {
     label: "Contact links",
     singular: "link",
-    intro: "Your email and social links on the Contact page and in the footer.",
+    intro: "Your email, phone and social handles. They appear in the home page Contact me pop-up, on the Contact page and in the footer.",
     audit: "link",
     icon: "globe",
     publicPath: "/",
@@ -209,7 +203,7 @@ export const COLLECTIONS = {
     fields: [
       { name: "title", label: "Label", kind: "text", required: true, max: 80, placeholder: "My GitHub" },
       { name: "platform", label: "Type", kind: "select", options: PLATFORMS },
-      { name: "url", label: "Link", kind: "text", required: true, max: 2048, placeholder: "https://github.com/you or mailto:you@example.com" },
+      { name: "url", label: "Link", kind: "text", required: true, max: 2048, placeholder: "https://github.com/you, mailto:you@gmail.com or tel:+233…" },
       { name: "is_visible", label: "Show on the website", kind: "checkbox" },
     ] as Field[],
   },
@@ -223,10 +217,25 @@ export const aboutSchema = z.object({
   intro: z.string().trim().min(1, "Add an introduction.").max(400),
   bio: z.string().trim().min(1, "Add your biography.").max(5000),
   location: optional(z.string().trim().max(100)),
+  // Shown first in the home page Contact me pop-up and on the Contact page.
+  email: optional(z.email("Enter a valid email address.").max(254)).optional(),
+  phone: optional(z.string().trim().regex(/^\+?[0-9 ()-]{6,20}$/, "Enter a phone number such as +233 20 000 0000.")).optional(),
   skills: z
     .string()
     .max(1000)
     .transform((value) => [...new Set(value.split(",").map((name) => name.trim()).filter(Boolean))])
     .pipe(z.array(z.string().max(50, "Keep each skill under 50 characters.")).max(40, "Use at most 40 skills.")),
+  interests: z
+    .string()
+    .max(1000)
+    .transform((value) => [...new Set(value.split(",").map((name) => name.trim()).filter(Boolean))])
+    .pipe(z.array(z.string().max(50, "Keep each interest under 50 characters.")).max(40, "Use at most 40.")).optional(),
+  // One school or course per line.
+  education: z
+    .string()
+    .max(2000)
+    .transform((value) => value.split(/\r?\n/).map((line) => line.trim()).filter(Boolean))
+    .pipe(z.array(z.string().max(200, "Keep each school line under 200 characters.")).max(10, "Use at most 10 lines."))
+    .optional(),
 });
-export type AboutContent = z.infer<typeof aboutSchema> & { photo_id?: string | null };
+export type AboutContent = z.infer<typeof aboutSchema> & { photo_id?: string | null; hero_photo_id?: string | null };

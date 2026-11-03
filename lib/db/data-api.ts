@@ -14,16 +14,26 @@ export async function userDataApi(path: string, init: RequestInit = {}): Promise
   const token = await getSessionToken();
   if (!token) return null;
 
+  // Only reads are retried after a dropped connection; a write might already have happened.
+  const isRead = !init.method || init.method.toUpperCase() === "GET";
   for (let attempt = 1; ; attempt++) {
-    const response = await fetch(`${env.NEON_DATA_API_URL}/${path}`, {
-      ...init,
-      cache: "no-store",
-      headers: {
-        ...init.headers,
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    let response: Response;
+    try {
+      response = await fetch(`${env.NEON_DATA_API_URL}/${path}`, {
+        ...init,
+        cache: "no-store",
+        headers: {
+          ...init.headers,
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+    } catch (error) {
+      if (!isRead || attempt >= 3) throw error;
+      console.warn(`Data API read failed to connect, retrying (${attempt} of 2)`);
+      await new Promise((resolve) => setTimeout(resolve, 400 * attempt));
+      continue;
+    }
     if (response.ok || attempt === MAX_ATTEMPTS) return response;
 
     const body = await response.clone().json().catch(() => ({}));

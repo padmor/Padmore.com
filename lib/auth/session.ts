@@ -22,11 +22,18 @@ export async function requireUser() {
 
 // Read fresh from the database on every request. Never from the JWT or the
 // client, so removing a role takes effect immediately.
+// A failed lookup is an error rather than "no roles": staff would otherwise get
+// a false not-found page. It still fails closed, since the error stops the page.
 export const getCurrentRoles = cache(async (): Promise<Role[]> => {
-  const response = await userDataApi("user_roles?select=role");
-  if (!response?.ok) return [];
-  const rows: { role: Role }[] = await response.json();
-  return rows.map((row) => row.role);
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    const response = await userDataApi("user_roles?select=role");
+    if (response?.ok) {
+      const rows: { role: Role }[] = await response.json();
+      return rows.map((row) => row.role);
+    }
+    console.error(`Role lookup failed: ${response?.status ?? "no token"}, attempt ${attempt}`);
+  }
+  throw new Error("Role lookup failed");
 });
 
 // Shows the not-found page rather than a 403, so private areas do not reveal that
@@ -35,6 +42,30 @@ export const getCurrentRoles = cache(async (): Promise<Role[]> => {
 export async function requireRole(allowed: readonly Role[]) {
   const user = await requireUser();
   const roles = await getCurrentRoles();
-  if (!roles.some((role) => allowed.includes(role))) notFound();
+  if (!roles.some((role) => allowed.includes(role))) {
+    // A token for another or expired session makes the database see no roles.
+    // That is a stale sign-in rather than a missing permission, so ask to sign in again.
+    if (await tokenIsStale(user.id)) redirect("/signin");
+    notFound();
+  }
   return { user, roles };
+}
+
+// Reads only the token's subject and expiry for this comparison. The Data API
+// verifies the signature itself, so nothing here is trusted for access.
+async function tokenIsStale(userId: string) {
+  const token = await getSessionToken();
+  try {
+    const payload = JSON.parse(Buffer.from(token!.split(".")[1], "base64url").toString("utf8")) as { sub?: string; exp?: number };
+    const expired = typeof payload.exp === "number" && payload.exp * 1000 < Date.now();
+    if (payload.sub !== userId || expired) {
+      console.warn(`Stale session token: ${payload.sub !== userId ? "belongs to another account" : "expired"}`);
+      return true;
+    }
+    console.warn("Signed-in account has no portal role");
+    return false;
+  } catch {
+    console.warn("Session token could not be read");
+    return true;
+  }
 }
