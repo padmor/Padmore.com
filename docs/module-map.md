@@ -12,7 +12,7 @@ The application is a modular monolith. Each feature owns its page-specific UI an
 | Collaboration | `features/collaboration`, `app/build-with-me` | `/build-with-me` |
 | Client requests | `features/project-requests`, `app/request-project` | `/request-project` |
 | Contact/subscriptions | `features/contact`, `app/contact` | `/contact` |
-| Hosted applications | `features/hosted-apps`, `app/hosted-apps` | `/hosted-apps` |
+| Live projects | `features/hosted-apps`, `app/hosted-apps` | `/hosted-apps` |
 | Achievements | `features/achievements`, `app/achievements` | `/achievements` |
 | Updates | `features/updates`, `app/updates` | `/updates` |
 | Authentication | `features/auth`, `app/signin`, `app/signup` | `/signin`, `/signup` |

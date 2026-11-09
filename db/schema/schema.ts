@@ -62,6 +62,7 @@ export const achievements = pgTable("achievements", {
 	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 	icon: text(),
 	imageId: uuid("image_id"),
+	category: text().default('milestone').notNull(),
 }, (table) => [
 	index("achievements_media_idx").using("btree", table.mediaAssetId.asc().nullsLast().op("uuid_ops")),
 	foreignKey({

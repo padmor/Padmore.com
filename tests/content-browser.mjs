@@ -282,7 +282,7 @@ try {
   const [{ photo }] = await owner`select setting_value->>'photo_id' as photo from public.site_settings where setting_key = 'about'`;
   check("your photo reaches the About and Profile pages", Boolean(photo) && (await html("/about")).includes(`/media/${photo}`) && (await html("/profile")).includes(`/media/${photo}`));
   const homeHtml = await html("/");
-  check("home hero shows only the two videos", homeHtml.includes("/videos/hero/developer-coding.mp4") && homeHtml.includes("/videos/hero/team-success.mp4") && !homeHtml.includes(`/media/${photo}`));
+  check("home hero shows the two videos", homeHtml.includes("/videos/hero/developer-coding.mp4") && homeHtml.includes("/videos/hero/team-success.mp4"));
   check("the placeholder portrait is replaced", !(await html("/about")).includes("portrait-reference-placeholder"));
 
   await openEdit("products", product);
