@@ -23,6 +23,7 @@ export async function SiteFooter() {
           <Link href="/community">Community</Link>
           <Link href="/about">About</Link>
           <Link href="/store">Store</Link>
+          <Link href="/signin">Sign in</Link>
         </div>
 
         <div className="footer-column footer-connect">
