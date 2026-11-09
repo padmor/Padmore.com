@@ -65,6 +65,10 @@ export function SiteHeader() {
             <Link href="/request-project" className="button button-primary header-hire-link">
               <Icon name="send" size={16} /> Hire Me
             </Link>
+            <Link href="/cart" className="icon-button cart-link" aria-label={"Shopping cart, " + count + " items"}>
+              <Icon name="store" />
+              {count > 0 && <span className="cart-count">{count}</span>}
+            </Link>
             <button
               type="button"
               className="icon-button mobile-menu-button"
