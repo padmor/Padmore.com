@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Icon } from "@/components/icon";
+import { AchievementFiles } from "@/features/admin/components/achievement-files";
+import { TutorialFiles } from "@/features/admin/components/tutorial-files";
 import { ContentForm, DeleteContentButton } from "@/features/admin/components/content-form";
 import { requireRole, type Role } from "@/lib/auth/session";
 import { COLLECTIONS, isCollection } from "@/modules/admin/collections";
@@ -22,5 +24,7 @@ export default async function EditContentPage({ params }: { params: Promise<{ co
     <Link href={`/admin/${key}`} className="back-link"><Icon name="arrow" size={15}/> Back to {collection.label.toLowerCase()}</Link>
     <div className="admin-title-row"><div><h1>{item.heading}</h1><p>Public changes appear on the site as soon as you save.</p></div><DeleteContentButton collection={key} id={item.id} title={item.heading}/></div>
     <ContentForm collection={key} id={item.id} values={item.values}/>
+    {key === "achievements" && <AchievementFiles achievementId={item.id}/>}
+    {key === "tutorials" && <TutorialFiles postId={item.id}/>}
   </>;
 }

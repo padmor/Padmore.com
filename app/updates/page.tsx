@@ -5,7 +5,7 @@ export const revalidate = 300;
 
 export default function UpdatesPage() {
   return <section className="page-container content-page">
-    <PageIntro eyebrow="BUILD IN PUBLIC" title="Latest updates" description="Notes from the work: ideas, progress, lessons and releases."/>
+    <PageIntro title="Updates" description="Recent news and progress on current work."/>
     <UpdateFeed/>
   </section>;
 }

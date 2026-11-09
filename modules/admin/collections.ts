@@ -40,6 +40,7 @@ const LEVELS = pair(["Beginner", "Intermediate", "Advanced"]);
 const UPDATE_TYPES = [["project_update", "Project update"], ["development_log", "Build log"], ["announcement", "Announcement"], ["personal_thought", "Learning note"]] as const;
 const PRODUCT_TYPES = [["source_code", "Digital download"], ["service", "Service"]] as const;
 const LICENSES = pair(["Personal use", "Personal and commercial use", "Single developer license", "Team license", "Individual learning license"]);
+const ACHIEVEMENT_CATEGORIES = [["certificate", "Certificate"], ["award", "Award"], ["milestone", "Work and milestones"]] as const;
 const ACHIEVEMENT_ICONS = [["🏆", "🏆 Award"], ["🎓", "🎓 Education"], ["📜", "📜 Certificate"], ["🥇", "🥇 First place"], ["🚀", "🚀 Launch"], ["💡", "💡 Idea"], ["⭐", "⭐ Milestone"]] as const;
 const OPPORTUNITY_AREAS = pair(["Web Apps", "Mobile Apps", "Product Design", "Backend Systems", "Content", "Marketing"]);
 const COMMITMENTS = pair(["Full-time", "Part-time", "Flexible", "Project-based"]);
@@ -49,7 +50,7 @@ export const COLLECTIONS = {
   tutorials: {
     label: "Tutorials",
     singular: "tutorial",
-    intro: "Guides on the Tutorials page and the home page.",
+    intro: "Guides on the Tutorials page and the home page. Open a tutorial to attach slides, PDFs, Markdown, images, audio or video.",
     audit: "tutorial",
     icon: "book",
     publicPath: "/tutorials",
@@ -105,7 +106,7 @@ export const COLLECTIONS = {
   achievements: {
     label: "Achievements",
     singular: "achievement",
-    intro: "Certificates, awards and milestones on the Achievements page.",
+    intro: "Certificates, awards and work milestones on the Achievements page. Open an item to attach PDFs, documents, images and videos.",
     audit: "achievement",
     icon: "sparkles",
     publicPath: "/achievements",
@@ -113,6 +114,7 @@ export const COLLECTIONS = {
     schema: z.object({
       title,
       description: optional(z.string().trim().max(1000)),
+      category: z.enum(values(ACHIEVEMENT_CATEGORIES)),
       organization: optional(z.string().trim().max(150)),
       credential_url: optional(webUrl),
       achieved_on: optional(z.iso.date("Use a valid date.")),
@@ -121,6 +123,7 @@ export const COLLECTIONS = {
     }),
     fields: [
       { name: "title", label: "Title", kind: "text", required: true, max: 150 },
+      { name: "category", label: "Type", kind: "select", options: ACHIEVEMENT_CATEGORIES },
       { name: "organization", label: "Awarded by", kind: "text", optional: true, max: 150 },
       { name: "achieved_on", label: "Date", kind: "date", optional: true },
       { name: "icon", label: "Icon", kind: "select", optional: true, other: true, options: ACHIEVEMENT_ICONS },
@@ -236,6 +239,16 @@ export const aboutSchema = z.object({
     .max(2000)
     .transform((value) => value.split(/\r?\n/).map((line) => line.trim()).filter(Boolean))
     .pipe(z.array(z.string().max(200, "Keep each school line under 200 characters.")).max(10, "Use at most 10 lines."))
+    .optional(),
+  // Shown on the About me page and the home page About me tab.
+  mission: optional(z.string().trim().max(600, "Keep your mission under 600 characters.")).optional(),
+  vision: optional(z.string().trim().max(600, "Keep your vision under 600 characters.")).optional(),
+  // One role per line: Role · Organisation · Years · What you did
+  experience: z
+    .string()
+    .max(4000)
+    .transform((value) => value.split(/\r?\n/).map((line) => line.trim()).filter(Boolean))
+    .pipe(z.array(z.string().max(400, "Keep each experience line under 400 characters.")).max(12, "Use at most 12 lines."))
     .optional(),
 });
 export type AboutContent = z.infer<typeof aboutSchema> & { photo_id?: string | null; hero_photo_id?: string | null };

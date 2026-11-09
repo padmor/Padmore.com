@@ -13,14 +13,13 @@ export async function SiteFooter() {
       <div className="footer-main">
         <div className="footer-brand-block">
           <Link href="/" className="brand"><BrandMark/><span>Padmore Yeb</span></Link>
-          <p>Build · Learn · Collaborate · Grow</p>
-          <p className="footer-note">A personal space for projects, ideas, learning and collaboration.</p>
+          <p className="footer-note">Web and mobile application developer based in Ghana. Projects, tutorials and digital products.</p>
         </div>
-        <div className="footer-column"><strong>Explore</strong><Link href="/projects">Projects</Link><Link href="/tutorials">Tutorials</Link><Link href="/store">Store</Link><Link href="/hosted-apps">Hosted apps</Link></div>
-        <div className="footer-column"><strong>Connect</strong><Link href="/build-with-me">Build with me</Link><Link href="/request-project">Request a project</Link><Link href="/community">Community</Link><Link href="/contact">Contact</Link></div>
-        <div className="footer-newsletter"><strong>Get occasional updates</strong><p>New projects, useful tutorials and product releases.</p><NewsletterForm compact /></div>
+        <div className="footer-column"><strong>Explore</strong><Link href="/projects">Projects</Link><Link href="/tutorials">Tutorials</Link><Link href="/store">Store</Link><Link href="/hosted-apps">Live projects</Link></div>
+        <div className="footer-column"><strong>Connect</strong><Link href="/build-with-me">Collaborate</Link><Link href="/request-project">Start a project</Link><Link href="/community">Community</Link><Link href="/contact">Contact</Link></div>
+        <div className="footer-newsletter"><strong>Newsletter</strong><p>New projects, tutorials and product releases.</p><NewsletterForm compact /></div>
       </div>
-      <div className="footer-bottom"><span>© {new Date().getFullYear()} Padmore Yeb. All rights reserved.</span><div className="social-links">{links.map((link) => <a key={link.url} href={link.url} aria-label={link.label ?? link.platform} target="_blank" rel="noopener noreferrer"><LinkIcon platform={link.platform} url={link.url}/></a>)}<a href="/contact" aria-label="Contact"><Icon name="mail"/></a></div><span className="footer-tagline">Designed to build, share and grow.</span></div>
+      <div className="footer-bottom"><span>© {new Date().getFullYear()} Padmore Yeb. All rights reserved.</span><div className="social-links">{links.map((link) => <a key={link.url} href={link.url} aria-label={link.label ?? link.platform} target="_blank" rel="noopener noreferrer"><LinkIcon platform={link.platform} url={link.url}/></a>)}<a href="/contact" aria-label="Contact"><Icon name="mail"/></a></div></div>
     </footer>
   );
 }

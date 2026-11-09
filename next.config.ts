@@ -8,6 +8,8 @@ const contentSecurityPolicy = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' blob: data:",
   "font-src 'self'",
+  // Achievement videos play from YouTube and Vimeo only.
+  "frame-src https://www.youtube-nocookie.com https://player.vimeo.com",
   "connect-src 'self'",
   "object-src 'none'",
   "base-uri 'self'",
@@ -27,8 +29,8 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   compress: true,
   experimental: {
-    // A 2 MB image plus the rest of the form.
-    serverActions: { bodySizeLimit: "3mb" },
+    // A 4 MB achievement file plus the rest of the form.
+    serverActions: { bodySizeLimit: "4.4mb" },
   },
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders }];

@@ -5,6 +5,7 @@ import { opportunities, posts, products, siteSettings, socialLinks } from "@/db/
 import type { Product, Tutorial } from "@/lib/data";
 import type { AboutContent } from "@/modules/admin/collections";
 import { DEFAULT_ABOUT } from "./defaults";
+import { listTutorialResourceLabels } from "./tutorial-files";
 
 const LIST_LIMIT = 100;
 
@@ -41,7 +42,10 @@ export async function listPublicTutorials(limit = LIST_LIMIT) {
     .where(and(isLivePost, eq(posts.contentType, "tutorial")))
     .orderBy(desc(posts.publishedAt))
     .limit(Math.min(limit, LIST_LIMIT));
-  return rows.map(toTutorial);
+  const tutorials = rows.map(toTutorial);
+  // A missing files table must never stop the tutorials from listing.
+  const labels = await listTutorialResourceLabels(tutorials.map((tutorial) => tutorial.slug)).catch(() => new Map<string, string[]>());
+  return tutorials.map((tutorial) => ({ ...tutorial, resources: labels.get(tutorial.slug) }));
 }
 
 export async function getPublicTutorial(slug: string) {

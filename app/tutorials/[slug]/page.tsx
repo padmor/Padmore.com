@@ -4,6 +4,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArticleBody } from "@/features/content/components/article-body";
 import { getPublicTutorial } from "@/modules/content/repository";
+import { listPublicTutorialFiles } from "@/modules/content/tutorial-files";
+import { TutorialResources } from "@/features/tutorials/components/tutorial-resources";
+import { FollowCard } from "@/features/follow/components/follow-card";
+import { BookmarkButton } from "@/features/projects/components/bookmark-button";
 import { CoverImage } from "@/features/content/components/site-image";
 import { Icon } from "@/components/icon";
 export const revalidate = 300;
@@ -17,5 +21,7 @@ export default async function TutorialPage({ params }: { params: Promise<{ slug:
   const { slug } = await params;
   const tutorial = await loadTutorial(slug);
   if (!tutorial) notFound();
-  return <article className="page-container article-page"><Link href="/tutorials" className="back-link"><Icon name="arrow" size={15}/> Back to tutorials</Link><div className="article-header"><span className="eyebrow">{tutorial.category} · {tutorial.level}</span><h1>{tutorial.title}</h1><p>{tutorial.description}</p><div className="tutorial-meta"><span><Icon name="clock" size={14}/> {tutorial.minutes} min read</span>{tutorial.videoUrl && <a className="text-link" href={tutorial.videoUrl} target="_blank" rel="noopener noreferrer">Watch the video</a>}</div></div><div className="article-art"><CoverImage id={tutorial.imageId} alt={tutorial.title}/></div><div className="article-body"><ArticleBody text={tutorial.body ?? ""}/></div></article>;
+  // A missing files table must never take the tutorial itself down.
+  const files = await listPublicTutorialFiles(slug).catch(() => []);
+  return <article className="page-container article-page"><Link href="/tutorials" className="back-link"><Icon name="arrow" size={15}/> Back to tutorials</Link><div className="article-header"><span className="eyebrow">{tutorial.category} · {tutorial.level}</span><h1>{tutorial.title}</h1><p>{tutorial.description}</p><div className="tutorial-meta"><span><Icon name="clock" size={14}/> {tutorial.minutes} min read</span>{tutorial.videoUrl && <a className="text-link" href={tutorial.videoUrl} target="_blank" rel="noopener noreferrer">Watch the video</a>}</div></div><div className="article-art"><CoverImage id={tutorial.imageId} alt={tutorial.title}/></div><div className="article-body"><ArticleBody text={tutorial.body ?? ""}/></div><TutorialResources files={files}/><FollowCard title="Stay in the loop" text="Follow to get new tutorials and projects as they are published." action={<BookmarkButton id={slug} kind="tutorial" labelled/>}/></article>;
 }

@@ -6,6 +6,7 @@ import { ImageField } from "@/features/admin/components/image-field";
 import { SelectWithOther } from "@/features/admin/components/select-with-other";
 import { COLLECTIONS, type CollectionKey, type Field } from "@/modules/admin/collections";
 import { deleteContentAction, saveContentAction, type ContentFormState } from "@/modules/admin/content-actions";
+import { SubmitButton } from "@/components/submit-button";
 
 const initialState: ContentFormState = {};
 const slugFrom = (title: string) => title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
@@ -49,12 +50,12 @@ export function ContentForm({ collection, id, values = {} }: { collection: Colle
     </div>
     <div className="admin-checks">{inputs.filter((field) => field.kind === "checkbox").map((field) => <label key={field.name}><input type="checkbox" name={field.name} defaultChecked={Boolean(values[field.name])}/> {field.label}</label>)}</div>
     {state.error && <div className="inline-notice" role="alert"><Icon name="info"/> {state.error}</div>}
-    <div className="admin-form-actions"><button className="button button-primary" type="submit" disabled={pending}>{pending ? "Saving…" : id ? "Save changes" : `Create ${singular}`}</button><Link className="button button-outline" href={`/admin/${collection}`}>Cancel</Link></div>
+    <div className="admin-form-actions"><button className="button button-primary" type="submit" disabled={pending} aria-busy={pending}>{pending ? "Saving…" : id ? "Save changes" : `Create ${singular}`}</button><Link className="button button-outline" href={`/admin/${collection}`}>Cancel</Link></div>
   </form>;
 }
 
 export function DeleteContentButton({ collection, id, title }: { collection: CollectionKey; id: string; title: string }) {
   return <form action={deleteContentAction.bind(null, collection, id)} onSubmit={(event) => { if (!window.confirm(`Delete "${title}" permanently? This can't be undone.`)) event.preventDefault(); }}>
-    <button className="button button-outline button-small admin-danger" type="submit">Delete</button>
+    <SubmitButton className="button button-outline button-small admin-danger" type="submit">Delete</SubmitButton>
   </form>;
 }

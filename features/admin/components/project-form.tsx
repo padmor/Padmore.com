@@ -42,6 +42,6 @@ export function ProjectForm({ project }: { project?: AdminProject }) {
       <label><input type="checkbox" name="is_tested" defaultChecked={project?.is_tested}/> Tested</label>
     </div>
     {state.error && <div className="inline-notice" role="alert"><Icon name="info"/> {state.error}</div>}
-    <div className="admin-form-actions"><button className="button button-primary" type="submit" disabled={pending}>{pending ? "Saving…" : project ? "Save changes" : "Create project"}</button><Link className="button button-outline" href="/admin/projects">Cancel</Link></div>
+    <div className="admin-form-actions"><button className="button button-primary" type="submit" disabled={pending} aria-busy={pending}>{pending ? "Saving…" : project ? "Save changes" : "Create project"}</button><Link className="button button-outline" href="/admin/projects">Cancel</Link></div>
   </form>;
 }

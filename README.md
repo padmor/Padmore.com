@@ -1,152 +1,79 @@
-# Padmore Yeb — Personal Developer Portfolio
+# Padmore.com
 
-A modular, light-mode-first personal portfolio built from the supplied 1536×1024 UI reference. The application uses semantic HTML, custom CSS, browser JavaScript through React client components, TypeScript, React and the Next.js App Router.
+Personal developer portfolio for Padmore Yeb: projects, tutorials, achievements, a members-only community and a follow feature, built with Next.js and a Neon Postgres backend.
 
-## Design source and fidelity notes
+## Features
 
-- `docs/visual-reference.jpg` is the supplied visual board, retained for side-by-side comparison.
-- The design is reproduced as separate pages rather than trying to render the composite reference image as a single webpage.
-- The supplied board contains example data and a portrait. The portrait crop in `public/images/portrait-reference-placeholder.webp` is a temporary reference placeholder, not an assertion that it is Padmore's actual photograph. Replace it with an approved personal portrait.
-- The sample projects, tutorials, products, prices, members and dashboard values are illustrative. Replace them with accurate content before public launch.
-- The page layouts follow the reference's white/soft-grey surfaces, deep navy type, electric-blue primary controls, violet/cyan accents, rounded cards, light borders and spacious typography.
+- **Portfolio:** home, About me (profile, education, schools and programmes, certificates), projects, live projects and achievements with PDFs, images and video.
+- **Tutorials:** articles with attached files of many types (Markdown, PDF, slides, audio, video). Reading, watching and listening are free; downloading files needs a free account.
+- **Community:** anyone can read; posting, replying and voting need a sign-in.
+- **Accounts:** sign in and sign up, return to the page you came from, saved tutorials and projects, a dashboard with a feed of new content since you followed.
+- **Follow:** follow the site to see new tutorials and projects in your dashboard.
+- **Admin:** staff tools for content, files, enquiries and subscribers.
 
-## Technology
+## Tech stack
 
-- HTML5 semantics
-- Custom CSS design tokens and responsive styling
-- JavaScript / TypeScript
-- React
-- Next.js App Router
-- CSS-based icons and illustrations (no icon-pack dependency)
+Next.js 16 (App Router, server actions), React 19, TypeScript, Tailwind CSS v4 with shadcn/ui components alongside the site's own CSS, Neon Postgres with row-level security, Neon Auth, Resend, Vitest and Playwright.
 
-Pinned framework versions in `package.json`:
+> This Next.js version differs from older releases. Read the guides in `node_modules/next/dist/docs/` before changing framework-level code (see `AGENTS.md`).
 
-- Next.js 16.4.3
-- React / React DOM 19.3.1
-- TypeScript 6.0.3 (compatible conservative pin; update deliberately after checking framework support)
+## Getting started
 
-Next.js 16 requires Node.js 20.9 or newer. Node.js 22 LTS is recommended for local development.
+Requires Node.js 22 LTS (20.9 or newer).
 
-## Run locally (Windows 11 / PowerShell)
-
-1. Install Node.js 22 LTS if it is not already installed.
-2. Extract this project folder.
-3. Open the folder in VS Code. The first `npm install` will create a `package-lock.json` for your machine; commit it after installation succeeds.
-4. Open Terminal → New Terminal.
-5. Run:
-
-```powershell
+```bash
 npm install
-npm run dev
+cp .env.example .env      # then fill in the values
+npm run db:migrate        # applies db/migrations/*.sql
+npm run dev               # http://localhost:3000
 ```
 
-6. Open `http://localhost:3000` in your browser.
+### Environment variables
 
-Production checks:
+See [.env.example](.env.example). `.env` is git-ignored and must never be committed. The server role (`DATABASE_SERVER_URL`) must be the limited `app_server` role, never the owner.
 
-```powershell
-npm run typecheck
-npm run build
-npm run start
+## Scripts
+
+| Command | What it does |
+|---|---|
+| `npm run dev` | Development server |
+| `npm run build` / `npm start` | Production build and server |
+| `npm run typecheck` | TypeScript check |
+| `npm test` | Unit tests (Vitest) |
+| `npm run test:community` | Browser tests for the Community, Follow, Saved items, tutorial and achievement files (needs a running build) |
+| `npm run test:e2e`, `test:portfolio`, `test:forms`, `test:admin`, `test:content` | Other browser suites |
+| `npm run db:migrate` | Apply database migrations |
+
+The browser tests need Microsoft Edge and a running app, and they create and remove throwaway accounts in the database named in `.env`. Run them against a development database.
+
+## Project structure
+
+```
+app/            Routes, layouts and route handlers (tutorial-files, achievement-files, state endpoints)
+components/     Shared site shell, icons, and shadcn/ui components (components/ui)
+features/       Feature UI: home, projects, tutorials, community, follow, achievements, admin, auth ...
+modules/        Server-side logic per area: repositories, actions, validation
+lib/            Shared helpers: auth, environment, data models, utilities
+db/             Drizzle schema, SQL migrations and seed
+scripts/        Migration and database check scripts
+tests/          Unit tests and browser suites
+docs/           Architecture, design system, module map, verification report
+foundation/     HTML, CSS and JavaScript learning exercises and a static preview (not part of the app)
+public/         Static images and videos
 ```
 
-## Development progression: HTML → CSS → JavaScript → TypeScript → React → Next.js
+The application is a modular monolith. See [docs/architecture.md](docs/architecture.md), [docs/module-map.md](docs/module-map.md) and [docs/design-system.md](docs/design-system.md).
 
-The `foundation/` directory preserves the intended learning sequence:
+## Deployment
 
-1. `foundation/01-html/index.html` — semantic HTML structure.
-2. `foundation/02-css/` — design tokens and responsive CSS styling.
-3. `foundation/03-javascript/` — browser-side validation and interaction without a framework.
-4. The production application under `app/`, `components/`, `features/` and `lib/` then applies TypeScript, React and Next.js. HTML, CSS and JavaScript remain the browser foundation; React and Next.js organize and deliver the final application rather than replacing web standards.
+1. Create a Neon project, run `npm run db:migrate`, and enable Neon Auth and the Data API.
+2. Create the project on a host such as Vercel and import this repository.
+3. Add every variable from `.env.example` as a production secret. Set `APP_URL` to the live domain.
+4. Build command `npm run build`, start command `npm start` (Vercel detects these).
+5. In Resend, verify your sending domain before turning on email.
 
-## Route map
+## Known limits
 
-- `/` — homepage
-- `/about` — personal profile
-- `/projects` and `/projects/[slug]` — searchable portfolio and project details
-- `/tutorials` and `/tutorials/[slug]` — learning hub and article pages
-- `/store`, `/store/[slug]`, `/cart` — product catalogue and demo cart
-- `/hosted-apps` — hosted application directory
-- `/community` — community preview
-- `/build-with-me` — collaboration opportunities and application form
-- `/request-project` — client project intake form
-- `/achievements` and `/updates` — milestones and development feed
-- `/contact` — contact form and contact placeholders
-- `/profile` — public profile preview
-- `/signin` and `/signup` — authentication UI previews
-- `/dashboard` — member dashboard preview
-- `/admin` — admin dashboard preview
-
-## Architecture
-
-- `app/` — route-level Next.js pages, layouts, loading/error boundaries and metadata.
-- `components/` — shared site shell, watch view, icon set, page intro, theme control and generic form feedback.
-- `features/` — implemented feature boundaries for profile, projects, tutorials, store/cart, hosted apps, community, collaboration, client requests, contact, authentication preview, achievements, updates, admin preview and analytics cards. Each feature owns its components and relevant local state/validation.
-- `lib/` — typed content models, illustrative data and shared helpers.
-- `public/` — optimized static assets and image placeholders.
-- `foundation/` — progressive HTML, CSS and JavaScript exercises.
-- `docs/` — supplied visual reference, module map, architecture notes, design tokens and verification report.
-- `tests/` — manual acceptance and responsive QA checklist.
-- `tests/` — manual acceptance and responsive QA checklist.
-
-The target architecture is a modular monolith. Feature modules should own their components, types, validation, services and tests; shared UI, authentication, storage and database access should be provided through explicit common interfaces.
-
-## Functional status and important limits
-
-Working in this front-end starter:
-
-- Next.js page routing and shared navigation.
-- Responsive navigation and compact bottom navigation.
-- Light/dark theme preference stored locally.
-- Project search, category and status filters.
-- Tutorial search and category filtering.
-- Project bookmarks stored locally in this browser.
-- Add/remove products in a local demo cart.
-- Client-side form validation and visible success/preview feedback.
-- Loading skeleton, error and not-found screens.
-
-Not connected yet (do not treat as production functionality):
-
-- Supabase database, real authentication, sessions and Row Level Security.
-- Secure project-request or collaboration form submission.
-- Email newsletter delivery or notifications.
-- Paystack / Flutterwave payment processing.
-- Real download entitlements, license keys or protected source-code delivery.
-- Real admin authorization, analytics or customer records.
-- Actual hosted-app URLs, GitHub links, approved profile photo and final personal content.
-
-Form submissions currently show a local preview confirmation only. No personal data is transmitted. Authentication pages are visual previews and do not store or send passwords. The admin page is explicitly marked as a preview and is not secured. The cart uses local storage only and does not process payments.
-
-Before production, connect a backend and enforce server-side authorization, private form storage, payment verification/webhooks, private object storage and audit-friendly order records. Never unlock paid downloads based on a browser-side success state.
-
-## Responsive and accessibility rules
-
-- Fluid layouts and typography using CSS Grid, Flexbox, `clamp()`, and content-driven breakpoints.
-- No dependency on device-name detection; foldables and split-screen layouts reflow according to viewport width.
-- A compact watch-sized mode prioritizes short information and quick links. Long forms, checkout and admin workflows should be continued on a larger screen.
-- Respect safe areas, keyboard focus, semantic landmarks and reduced motion.
-- Breakpoints are content-driven; test at 160, 240, 320, 360, 430, 600, 768, 1024, 1366 and 1920 CSS pixels.
-
-## Performance strategy
-
-- Next.js route-level splitting and server-first rendering.
-- Responsive image sizes and AVIF/WebP output via `next/image` configuration.
-- No mandatory animation or icon libraries.
-- Compression enabled at the Next.js server layer; enable Brotli at the CDN/hosting layer where supported.
-- Static assets should use fingerprinted URLs and immutable caching after production deployment.
-- Public content may use deliberate revalidation; authenticated pages, admin, orders and private submissions must never enter a shared public cache.
-- Keep search and filtering scoped to loaded datasets; use indexed database queries and cursor pagination after connecting the backend.
-- Performance budgets are targets, not verified results. Measure Core Web Vitals with real-user or lab tooling before claiming thresholds are met.
-
-## Recommended next development tasks
-
-1. Replace the temporary portrait and illustrative sample content with verified personal material.
-2. Convert `features/` from an empty directory into separate project, tutorial, store, community, collaboration and enquiry modules.
-3. Add automated tests and inspect each route at the agreed reference viewport.
-4. Connect Supabase Auth/Postgres/Storage with least-privilege RLS policies.
-5. Connect server-verified payment provider flows and secure product delivery.
-6. Verify visual fidelity using individual source screenshots for each target panel, because the master image is a composite board.
-
-## Quick visual preview without installing packages
-
-Open `preview.html` directly in Chrome or Edge to inspect the homepage composition and shared design styles. This is a static visual aid only; use the Next.js app (`npm install` then `npm run dev`) for real page routing and interactive feature previews. The `foundation/` exercises are deliberately separate from the Next.js application so the HTML → CSS → JavaScript learning progression remains visible without duplicating the production app.
+- Uploaded files are stored in the database and are limited to 4 MB each. Use YouTube or Vimeo links for large video and audio.
+- Follower emails are not sent yet. Followers see new content in their dashboard. Email needs a verified Resend sender.
+- Sample copy and the portrait placeholder (`public/images/portrait-reference-placeholder.webp`) should be replaced with approved personal material before launch.

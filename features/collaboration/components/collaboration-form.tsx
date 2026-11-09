@@ -27,7 +27,7 @@ export function CollaborationForm({ opportunities }: { opportunities: string[] }
     </div>
     <div className="field"><label htmlFor="collab-motivation">What would you like to contribute? <span>*</span></label><textarea id="collab-motivation" name="motivation" rows={4} placeholder="Tell me what you'd enjoy building together..." required minLength={20} maxLength={9000}/></div>
     <label className="checkbox-field"><input type="checkbox" required/><span>I understand this is an expression of interest, not a confirmed role.</span></label>
-    <button className="button button-primary button-full" type="submit" disabled={pending}>{pending ? "Sending…" : "Send collaboration application"}</button>
+    <button className="button button-primary button-full" type="submit" disabled={pending} aria-busy={pending}>{pending ? "Sending…" : "Send collaboration application"}</button>
     {state.error && <div className="inline-notice" role="alert"><Icon name="info"/> {state.error}</div>}
     {state.sent && <FormNotice>Thanks, your application has been received. I'll reply by email.</FormNotice>}
   </form>;

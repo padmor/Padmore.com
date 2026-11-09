@@ -8,3 +8,9 @@ coverage/
 .DS_Store
 *.log
 *.tsbuildinfo
+
+# Local tooling and deployment
+.vercel/
+.claude/
+playwright-report/
+test-results/

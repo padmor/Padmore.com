@@ -90,7 +90,7 @@ const MAPPINGS: Record<CollectionKey, Mapping> = {
   },
   achievements: {
     table: "achievements",
-    select: "id,title,description,organization,credential_url,achieved_on,icon,image_id,is_published,updated_at",
+    select: "id,title,description,organization,credential_url,achieved_on,icon,image_id,category,is_published,updated_at",
     toItem: ({ id: _id, updated_at: _updated, ...values }) => ({
       heading: String(values.title),
       status: shown(values.is_published),

@@ -1,6 +1,7 @@
 import { requireRole } from "@/lib/auth/session";
 import { userDataApi } from "@/lib/db/data-api";
 import { updateInquiryStatusAction } from "@/modules/admin/inbox";
+import { SubmitButton } from "@/components/submit-button";
 
 export const metadata = { title: "Enquiries" };
 export const dynamic = "force-dynamic";
@@ -41,7 +42,7 @@ export default async function EnquiriesPage() {
         <form className="admin-status-form" action={updateInquiryStatusAction.bind(null, item.id)}>
           <label htmlFor={`status-${item.id}`}>Status</label>
           <select id={`status-${item.id}`} name="status" defaultValue={item.status}>{STATUSES.map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select>
-          <button className="button button-outline button-small" type="submit">Update</button>
+          <SubmitButton className="button button-outline button-small" type="submit">Update</SubmitButton>
         </form>
       </article>;
     })}</div> : <div className="dashboard-empty"><strong>No enquiries yet</strong><p>Messages sent through the website will appear here.</p></div>}

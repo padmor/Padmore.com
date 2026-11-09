@@ -26,7 +26,7 @@ export function RequestProjectForm() {
       <div className="field"><label htmlFor="request-reference">Reference link <small>Optional</small></label><input id="request-reference" name="reference" type="url" placeholder="https://"/></div>
     </div>
     <label className="checkbox-field"><input type="checkbox" required/><span>I agree to be contacted about this enquiry.</span></label>
-    <button className="button button-primary button-full" type="submit" disabled={pending}>{pending ? "Sending…" : "Submit project request"} <Icon name="arrow" size={17}/></button>
+    <button className="button button-primary button-full" type="submit" disabled={pending} aria-busy={pending}>{pending ? "Sending…" : "Submit project request"} <Icon name="arrow" size={17}/></button>
     {state.error && <div className="inline-notice" role="alert"><Icon name="info"/> {state.error}</div>}
     {state.sent && <FormNotice>Thanks, your project request has been received. I'll reply by email.</FormNotice>}
     <p className="form-footnote"><Icon name="shield-check" size={15}/> Your details are only visible to authorized staff.</p>

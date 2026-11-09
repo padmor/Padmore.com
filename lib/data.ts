@@ -29,6 +29,8 @@ export type Tutorial = {
   body?: string;
   videoUrl?: string;
   imageId?: string;
+  // What is attached, as short labels for the card: Video, Audio, Slides, PDF, Notes, Files.
+  resources?: string[];
 };
 
 export type Product = {

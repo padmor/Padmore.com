@@ -7,7 +7,7 @@ import { linkHandle, platformName, type ContactLink } from "@/features/contact/p
 
 // "Contact me" opens a pop-up with your email and phone from About me and every
 // contact link from the manager portal, so a change there shows here too.
-export function ContactModal({ links: initialLinks }: { links: ContactLink[] }) {
+export function ContactModal({ links: initialLinks, triggerClassName = "button button-outline" }: { links: ContactLink[]; triggerClassName?: string }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const [links, setLinks] = useState(initialLinks);
   const [loading, setLoading] = useState(false);
@@ -39,11 +39,11 @@ export function ContactModal({ links: initialLinks }: { links: ContactLink[] }) 
   }
 
   return <>
-    <button type="button" className="button button-outline" onClick={open} aria-haspopup="dialog"><Icon name="mail" size={16}/> Contact me</button>
+    <button type="button" className={triggerClassName} onClick={open} aria-haspopup="dialog"><Icon name="mail" size={16}/> Contact me</button>
     <dialog ref={dialog} className="contact-modal" aria-labelledby="contact-modal-title" onClick={(event) => { if (event.target === event.currentTarget) event.currentTarget.close(); }}>
       <div className="contact-modal-inner">
         <div className="contact-modal-head">
-          <div><span className="eyebrow">LET&apos;S CONNECT</span><h2 id="contact-modal-title">Get in touch</h2></div>
+          <div><h2 id="contact-modal-title">Get in touch</h2></div>
           <button type="button" className="icon-button" aria-label="Close" onClick={() => dialog.current?.close()}><Icon name="close"/></button>
         </div>
         {links.length > 0
@@ -57,7 +57,7 @@ export function ContactModal({ links: initialLinks }: { links: ContactLink[] }) 
               <button type="button" className="icon-button" onClick={() => copy(link.url)} aria-label={`Copy ${link.label || platformName(link.platform)}`}><Icon name={copied === link.url ? "check" : "copy"} size={16}/></button>
             </li>;
           })}</ul>
-          : <p className="contact-modal-empty">{loading ? "Loading contact details…" : "Contact details are coming soon. You can still send a message below."}</p>}
+          : <p className="contact-modal-empty">{loading ? "Loading contact details…" : "Contact details are not available yet. You can still send a message below."}</p>}
         <Link href="/contact" className="button button-primary contact-modal-cta">Send a message <Icon name="arrow" size={16}/></Link>
         <p className="sr-only" aria-live="polite">{copied ? "Copied" : ""}</p>
       </div>

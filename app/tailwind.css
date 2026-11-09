@@ -1,0 +1,112 @@
+/*
+  Tailwind + shadcn/ui, used alongside globals.css.
+
+  - No preflight: Tailwind's global reset would restyle every existing page.
+    A small reset scoped to [data-tw] wrappers stands in for it.
+  - source(none) + @source: utilities are only generated for class names used
+    in the files listed below, so words like "grid" or "hidden" elsewhere in the
+    codebase don't silently pick up Tailwind styles.
+  - Colours map onto the tokens in globals.css, so there is one palette and
+    the existing data-theme toggle drives dark mode.
+*/
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities) source(none);
+@import "tw-animate-css";
+
+@source "../components/ui";
+@source "../features/home";
+@source "./page.tsx";
+@source "./about/page.tsx";
+@source "./community/page.tsx";
+@source "./achievements/page.tsx";
+@source "./dashboard/page.tsx";
+@source "../features/community";
+@source "../features/achievements";
+@source "../features/tutorials";
+@source "../features/follow";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* globals.css already uses --radius-* and --shadow-* for other things, so the
+   Tailwind scale is inlined here rather than read from those variables. */
+@theme inline {
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+
+  --font-display: var(--font-geist), Inter, ui-sans-serif, system-ui, sans-serif;
+
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
+  --color-card: var(--surface);
+  --color-card-foreground: var(--text);
+  --color-popover: var(--surface);
+  --color-popover-foreground: var(--text);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: #fff;
+  --color-primary-soft: var(--primary-soft);
+  --color-secondary: var(--bg-muted);
+  --color-secondary-foreground: var(--text-soft);
+  --color-muted: var(--bg-soft);
+  --color-muted-foreground: var(--muted);
+  --color-soft-foreground: var(--text-soft);
+  --color-accent: var(--primary-soft);
+  --color-accent-foreground: var(--primary);
+  --color-destructive: var(--danger);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-input: var(--border-strong);
+  --color-ring: var(--primary);
+  --color-violet: var(--violet);
+  --color-violet-soft: var(--violet-soft);
+  --color-cyan: var(--cyan);
+  --color-cyan-soft: var(--cyan-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-danger-soft: var(--danger-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-float-slow: float 8s ease-in-out infinite;
+  --animate-ping-soft: ping-soft 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes ping-soft {
+  0% { transform: scale(.6); opacity: .45; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+/* Stand-in for preflight inside Tailwind-built sections only. The contact
+   dialog is left alone because it is still styled by globals.css. */
+@layer base {
+  [data-tw] :where(*:not(dialog, dialog *)),
+  [data-tw] :where(*:not(dialog, dialog *))::before,
+  [data-tw] :where(*:not(dialog, dialog *))::after {
+    box-sizing: border-box;
+    border: 0 solid;
+  }
+  [data-tw] :where(h1, h2, h3, h4, h5, h6, p, ul, ol, figure):not(dialog *) { margin: 0; }
+  [data-tw] :where(ul, ol):not(dialog *) { padding: 0; list-style: none; }
+  [data-tw] :where(button):not(dialog *) { background: transparent; color: inherit; font: inherit; cursor: pointer; }
+  [data-tw] :where(video, img) { display: block; max-width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-tw] *, [data-tw] *::before, [data-tw] *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

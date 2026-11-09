@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/server";
 import { AUTH_ACCOUNT_LIMIT, AUTH_IP_LIMIT, clientIp, consumeRateLimit } from "@/lib/security/rate-limit";
 import { env } from "@/lib/environment/server";
+import { returnPathOrDefault } from "@/lib/auth/return-path";
 import { forgotPasswordSchema, resetPasswordSchema, signInSchema, signUpSchema } from "./validation";
 
 export type AuthState = { error?: string; notice?: string };
@@ -26,8 +27,9 @@ export async function signInAction(_: AuthState, formData: FormData): Promise<Au
   // The same message either way, so the form does not reveal which emails exist.
   if (error) return { error: "That email and password didn't match." };
 
-  // A fixed destination: redirect targets are never taken from user input.
-  redirect("/dashboard");
+  // Back to the page the person came from, but only a plain path on this site (see return-path.ts).
+  // With none, they go to the dashboard.
+  redirect(returnPathOrDefault(formData.get("next")));
 }
 
 export async function signUpAction(_: AuthState, formData: FormData): Promise<AuthState> {
@@ -39,7 +41,7 @@ export async function signUpAction(_: AuthState, formData: FormData): Promise<Au
   if (error) return { error: "We couldn't create that account. Check your details or try signing in." };
   if (!data?.token) return { notice: "Check your email to confirm your account, then sign in." };
 
-  redirect("/dashboard");
+  redirect(returnPathOrDefault(formData.get("next")));
 }
 
 export async function requestPasswordResetAction(_: AuthState, formData: FormData): Promise<AuthState> {
