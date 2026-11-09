@@ -26,7 +26,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <section className="home-hero-section" aria-label="Introduction">
+      <section data-tw className="home-hero-section" aria-label="Introduction">
         <HeroIntro
           showTabs={false}
           about={{
