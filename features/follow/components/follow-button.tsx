@@ -7,10 +7,9 @@ import { toggleFollowAction } from "@/modules/follow/actions";
 
 type State = { count: number; following: boolean; signedIn: boolean; ready: boolean };
 
-// Follow Padmore. The count and the visitor's own state are read after the page
-// loads, so the page itself can stay cached. Needs an AuthPromptProvider above it,
-// which is what asks a visitor who is not signed in to sign in when they press it.
-export function FollowButton() {
+// The count and visitor state are loaded after the page renders so cached pages
+// remain public. A visitor without an account is prompted to sign in on follow.
+export function FollowButton({ compact = false }: { compact?: boolean }) {
   const ask = useAuthPrompt();
   const [state, setState] = useState<State>({ count: 0, following: false, signedIn: false, ready: false });
   const [pending, start] = useTransition();
@@ -36,13 +35,25 @@ export function FollowButton() {
     });
   }
 
-  return <div className="grid gap-2">
-    <div className="flex flex-wrap items-center gap-3">
-      <Button type="button" onClick={toggle} disabled={!state.ready || pending} aria-busy={pending} aria-pressed={state.signedIn ? state.following : undefined} variant={state.following ? "outline" : "default"}>
-        {state.following ? <><Check/>Following</> : <><UserPlus/>Follow</>}
-      </Button>
-      <span className="text-sm text-muted-foreground tabular-nums" aria-live="polite">{state.ready ? `${state.count} ${state.count === 1 ? "follower" : "followers"}` : " "}</span>
+  return (
+    <div className={compact ? "follow-button-compact" : "grid gap-2"}>
+      <div className="flex flex-wrap items-center gap-3">
+        <Button
+          type="button"
+          onClick={toggle}
+          disabled={!state.ready || pending}
+          aria-busy={pending}
+          aria-pressed={state.signedIn ? state.following : undefined}
+          aria-label={compact ? (state.following ? "Following Padmore" : "Follow Padmore") : undefined}
+          variant={compact || state.following ? "outline" : "default"}
+          size={compact ? "sm" : "default"}
+          className={compact ? "header-follow-trigger" : undefined}
+        >
+          {state.following ? <><Check/>Following</> : <><UserPlus/>Follow</>}
+        </Button>
+        {!compact && <span className="text-sm text-muted-foreground tabular-nums" aria-live="polite">{state.ready ? state.count + " " + (state.count === 1 ? "follower" : "followers") : " "}</span>}
+      </div>
+      {error && <p role="alert" className="text-xs font-medium text-warning">{error}</p>}
     </div>
-    {error && <p role="alert" className="text-xs font-medium text-warning">{error}</p>}
-  </div>;
+  );
 }

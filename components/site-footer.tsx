@@ -13,13 +13,43 @@ export async function SiteFooter() {
       <div className="footer-main">
         <div className="footer-brand-block">
           <Link href="/" className="brand"><BrandMark/><span>Padmore Yeb</span></Link>
-          <p className="footer-note">Web and mobile application developer based in Ghana. Projects, tutorials and digital products.</p>
+          <p className="footer-note">Build · Learn · Share</p>
         </div>
-        <div className="footer-column"><strong>Explore</strong><Link href="/projects">Projects</Link><Link href="/tutorials">Tutorials</Link><Link href="/store">Store</Link><Link href="/hosted-apps">Live projects</Link></div>
-        <div className="footer-column"><strong>Connect</strong><Link href="/build-with-me">Collaborate</Link><Link href="/request-project">Start a project</Link><Link href="/community">Community</Link><Link href="/contact">Contact</Link></div>
-        <div className="footer-newsletter"><strong>Newsletter</strong><p>New projects, tutorials and product releases.</p><NewsletterForm compact /></div>
+
+        <div className="footer-column">
+          <strong>Quick Links</strong>
+          <Link href="/projects">Projects</Link>
+          <Link href="/tutorials">Tutorials</Link>
+          <Link href="/community">Community</Link>
+          <Link href="/about">About</Link>
+          <Link href="/store">Store</Link>
+        </div>
+
+        <div className="footer-column footer-connect">
+          <strong>Connect</strong>
+          {links.slice(0, 4).map((link) => (
+            <a key={link.url} href={link.url} aria-label={link.label ?? link.platform} target="_blank" rel="noopener noreferrer">
+              <LinkIcon platform={link.platform} url={link.url}/>
+              <span>{link.label ?? link.platform}</span>
+            </a>
+          ))}
+          <Link href="/contact"><Icon name="mail" size={16}/><span>Email</span></Link>
+        </div>
+
+        <div className="footer-newsletter" id="newsletter">
+          <strong>Subscribe for updates</strong>
+          <p>Get notified about new projects and tutorials.</p>
+          <NewsletterForm compact />
+        </div>
       </div>
-      <div className="footer-bottom"><span>© {new Date().getFullYear()} Padmore Yeb. All rights reserved.</span><div className="social-links">{links.map((link) => <a key={link.url} href={link.url} aria-label={link.label ?? link.platform} target="_blank" rel="noopener noreferrer"><LinkIcon platform={link.platform} url={link.url}/></a>)}<a href="/contact" aria-label="Contact"><Icon name="mail"/></a></div></div>
+
+      <div className="footer-bottom">
+        <span>© {new Date().getFullYear()} Padmore Yeb. All rights reserved.</span>
+        <div className="social-links">
+          {links.map((link) => <a key={link.url} href={link.url} aria-label={link.label ?? link.platform} target="_blank" rel="noopener noreferrer"><LinkIcon platform={link.platform} url={link.url}/></a>)}
+          <a href="/contact" aria-label="Contact"><Icon name="mail"/></a>
+        </div>
+      </div>
     </footer>
   );
 }

@@ -24,7 +24,7 @@ function Pills({ items }: { items: string[] }) {
 // share the same space, and only appear once there is something to show.
 // "Biography" swaps the video for a full-width profile (`profile`); every other
 // tab keeps the two-column layout with the video (`visual`) beside it.
-export function HeroIntro({ intro, visual, profile, about }: { intro: ReactNode; visual: ReactNode; profile: ReactNode; about: About }) {
+export function HeroIntro({ intro, visual, profile, about, showTabs = true }: { intro: ReactNode; visual: ReactNode; profile: ReactNode; about: About; showTabs?: boolean }) {
   const tabs = [
     { key: "intro", label: "Overview", show: true },
     { key: "bio", label: "About me", show: Boolean(about.bio) },
@@ -33,15 +33,15 @@ export function HeroIntro({ intro, visual, profile, about }: { intro: ReactNode;
     { key: "photos", label: "Gallery", show: about.photos.length > 0 },
   ].filter((tab) => tab.show);
   const [active, setActive] = useState("intro");
-  const showProfile = active === "bio" && Boolean(about.bio);
+  const showProfile = showTabs && active === "bio" && Boolean(about.bio);
 
-  return <Tabs value={active} onValueChange={setActive} className="page-container relative z-10 gap-8 pt-10 pb-10 sm:pt-14 lg:pt-16 lg:pb-14">
-    {tabs.length > 1 && <TabsList aria-label="Profile sections" className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+  return <Tabs value={active} onValueChange={setActive} className={showTabs ? "page-container relative z-10 gap-8 pt-10 pb-10 sm:pt-14 lg:pt-16 lg:pb-14" : "page-container relative z-10 home-hero-shell"}>
+    {showTabs && tabs.length > 1 && <TabsList aria-label="Profile sections" className="animate-in fade-in slide-in-from-bottom-2 duration-500">
       {tabs.map((tab) => <TabsTrigger key={tab.key} value={tab.key}>{tab.label}</TabsTrigger>)}
     </TabsList>}
 
-    {showProfile ? <TabsContent value="bio" className="min-w-0">{profile}</TabsContent> : <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-16">
-    <div className="min-h-[clamp(300px,34vw,400px)] min-w-0">
+    {showProfile ? <TabsContent value="bio" className="min-w-0">{profile}</TabsContent> : <div className={showTabs ? "grid items-center gap-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-16" : "home-hero-grid"}>
+    <div className={showTabs ? "min-h-[clamp(300px,34vw,400px)] min-w-0" : "home-hero-copy-wrap"}>
       <TabsContent value="intro">{intro}</TabsContent>
 
       {about.education.length > 0 && <TabsContent value="school" className={panelMotion}>
