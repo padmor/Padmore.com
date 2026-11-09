@@ -940,3 +940,34 @@ button[aria-busy="true"] > svg { margin-left: 0; }
   .footer-main { grid-template-columns: 1fr 1fr; gap: 22px 16px; }
   .footer-newsletter { grid-column: 1 / -1; }
 }
+
+
+/* Keep the approved light-first homepage legible when the existing theme toggle is used. */
+:root[data-theme="dark"] .home-role-badge {
+  color: #ccebd9;
+  background: rgba(21, 150, 107, .16);
+}
+:root[data-theme="dark"] .home-hero-photo-decoration { opacity: .3; }
+:root[data-theme="dark"] .home-hero-photo-frame {
+  border-color: rgba(255, 255, 255, .12);
+  background: var(--surface);
+}
+:root[data-theme="dark"] .home-hero-availability {
+  border-color: var(--border);
+  color: var(--text);
+  background: rgba(23, 35, 59, .94);
+}
+:root[data-theme="dark"] .project-cover-fallback {
+  color: var(--text);
+  background: linear-gradient(135deg, #1b2944, #17233b);
+}
+:root[data-theme="dark"] .project-cover-fallback > span {
+  color: #fff;
+}
+:root[data-theme="dark"] .home-tutorial-empty {
+  border-color: var(--border);
+  background: var(--bg-soft);
+}
+:root[data-theme="dark"] .home-tutorial-empty-icon {
+  background: var(--bg-muted);
+}

@@ -23,7 +23,7 @@ export function ProjectCard({ project, variant = "default" }: { project: Project
           {project.imageId ? (
             <SiteImage id={project.imageId} alt={project.title + " project preview"} />
           ) : (
-            <div className="project-cover-fallback" aria-label={project.title + " preview has not been uploaded"}>
+            <div className="project-cover-fallback" role="img" aria-label={project.title + " preview has not been uploaded"}>
               <span>{initials || "PY"}</span>
               <div>
                 <strong>{project.title}</strong>
