@@ -2722,3 +2722,33 @@ button[aria-busy="true"] > svg { margin-left: 0; }
   .project-showcase-artwork-mark { width: 31px; height: 31px; border-radius: 9px; }
   .project-showcase-artwork-center strong { font-size: clamp(12px, 1.05vw, 16px); }
 }
+
+
+/* Reference-derived media: preserve the exact cover composition when there is
+   no separately uploaded project image in the content database. */
+.project-showcase-reference-cover {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--bg-soft);
+}
+.project-showcase-reference-cover img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 400%;
+  max-width: none;
+  height: 100%;
+  object-fit: fill;
+}
+.project-showcase-reference-cover.cover-1 img { transform: translateX(-25%); }
+.project-showcase-reference-cover.cover-2 img { transform: translateX(-50%); }
+.project-showcase-reference-cover.cover-3 img { transform: translateX(-75%); }
+.home-hero-reference-photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}

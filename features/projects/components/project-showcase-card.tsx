@@ -9,20 +9,8 @@ export function ProjectShowcaseArtwork({ project, imageId }: { project: Resolved
   }
 
   return (
-    <div className={`project-showcase-artwork theme-${project.theme}`} role="img" aria-label={`${project.title} project cover`}>
-      <div className="project-showcase-artwork-top">
-        <span>{project.coverKicker}</span>
-        <span>PADMORE / WORK</span>
-      </div>
-      <div className="project-showcase-artwork-center">
-        <span className="project-showcase-artwork-mark" aria-hidden="true">{project.mark}</span>
-        <strong>{project.coverTitle}</strong>
-      </div>
-      <div className="project-showcase-artwork-bottom">
-        <span>{project.coverNote}</span>
-        <span>0{project.slug === "green-building-creations" ? "1" : project.slug === "gbhpl" ? "2" : project.slug === "hostivo" ? "3" : "4"}</span>
-      </div>
-      <span className="project-showcase-artwork-orbit" aria-hidden="true" />
+    <div className={`project-showcase-reference-cover cover-${project.referenceCoverIndex}`} role="img" aria-label={`${project.title} project preview from the approved portfolio design`}>
+      <img src="/images/showcase/padmore-project-covers.webp" alt="" aria-hidden="true" />
     </div>
   );
 }

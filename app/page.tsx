@@ -83,7 +83,7 @@ export default async function HomePage() {
               </ul>
             </>
           }
-          visual={<HeroVisual photoId={heroPhotoId} />}
+          visual={<HeroVisual photoId={heroPhotoId} fallbackSrc="/images/showcase/padmore-hero-reference.webp" />}
         />
         <HomeChangesPanel />
       </section>

@@ -13,6 +13,7 @@ export type PortfolioShowcase = {
   coverTitle: string;
   coverNote: string;
   mark: string;
+  referenceCoverIndex: number;
   theme: "green" | "amber" | "blue" | "navy";
   websiteUrl?: string;
   websiteLabel?: string;
@@ -38,6 +39,7 @@ export const PORTFOLIO_SHOWCASES: PortfolioShowcase[] = [
     coverTitle: "Plan. Design. Build.",
     coverNote: "Sustainable spaces, thoughtfully presented.",
     mark: "GBC",
+    referenceCoverIndex: 0,
     theme: "green",
     websiteUrl: "https://gh.linkedin.com/company/green-building-creations",
     websiteLabel: "Company profile",
@@ -61,6 +63,7 @@ export const PORTFOLIO_SHOWCASES: PortfolioShowcase[] = [
     coverTitle: "From product to doorstep.",
     coverNote: "A connected e-commerce experience.",
     mark: "G",
+    referenceCoverIndex: 1,
     theme: "amber",
     websiteUrl: "https://gbhpl.net/",
     websiteLabel: "Visit live website",
@@ -84,6 +87,7 @@ export const PORTFOLIO_SHOWCASES: PortfolioShowcase[] = [
     coverTitle: "A clearer way to find a place.",
     coverNote: "Accommodation workflows, brought together.",
     mark: "H",
+    referenceCoverIndex: 2,
     theme: "blue",
     matchTerms: ["hostivo"],
   },
@@ -105,6 +109,7 @@ export const PORTFOLIO_SHOWCASES: PortfolioShowcase[] = [
     coverTitle: "Control, naturally.",
     coverNote: "An offline-first AI hardware concept.",
     mark: "N",
+    referenceCoverIndex: 3,
     theme: "navy",
     matchTerms: ["nexus"],
   },
