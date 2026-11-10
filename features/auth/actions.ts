@@ -40,7 +40,7 @@ export async function signUpAction(_: AuthState, formData: FormData): Promise<Au
 
   const { data, error } = await auth.signUp.email(parsed.data);
   if (error) return { error: "We couldn't create that account. Check your details or try signing in." };
-  await recordEngagementEvent("signup_completed", "/signup");
+  await recordEngagementEvent("signup_submitted", "/signup");
   if (!data?.token) return { notice: "Check your email to confirm your account, then sign in." };
 
   redirect(returnPathOrDefault(formData.get("next")));

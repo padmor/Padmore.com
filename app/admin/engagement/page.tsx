@@ -8,12 +8,12 @@ export const dynamic = "force-dynamic";
 const cards = [
   ["page_view", "Page views", "Public page visits"],
   ["follow_added", "New follows", "Members who followed"],
-  ["signup_completed", "Account sign-ups", "Completed account creation"],
+  ["signup_submitted", "Sign-up submissions", "Accepted account-creation requests"],
   ["tutorial_open", "Tutorial opens", "Visits to published lessons"],
   ["project_open", "Project opens", "Visits to project details"],
   ["product_open", "Product views", "Visits to product details"],
   ["cart_added", "Cart additions", "Items added; not completed sales"],
-  ["newsletter_subscribed", "Newsletter sign-ups", "Successful subscription submissions"],
+  ["newsletter_subscribed", "New subscribers", "New email records; repeat submissions are excluded"],
   ["project_request_submitted", "Project enquiries", "Submitted project requests"],
   ["collaboration_submitted", "Collaboration requests", "Submitted expressions of interest"],
 ] as const;

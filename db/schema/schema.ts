@@ -1088,7 +1088,7 @@ export const siteEngagementEvents = pgTable("site_engagement_events", {
   index("site_engagement_events_path_date_idx").using("btree", table.pathname.asc().nullsLast().op("text_ops"), table.createdAt.desc().nullsFirst().op("timestamptz_ops")),
   pgPolicy("site_engagement_events_server_insert", { as: "permissive", for: "insert", to: ["app_server"], withCheck: sql`true` }),
   pgPolicy("site_engagement_events_server_read", { as: "permissive", for: "select", to: ["app_server"], using: sql`true` }),
-  check("site_engagement_events_event_name_check", sql`event_name = ANY (ARRAY['page_view'::text, 'project_open'::text, 'tutorial_open'::text, 'product_open'::text, 'follow_click'::text, 'follow_added'::text, 'follow_removed'::text, 'signup_completed'::text, 'newsletter_subscribed'::text, 'project_request_submitted'::text, 'collaboration_submitted'::text, 'cart_added'::text, 'save_added'::text, 'save_removed'::text, 'community_post_attempt'::text])`),
+  check("site_engagement_events_event_name_check", sql`event_name = ANY (ARRAY['page_view'::text, 'project_open'::text, 'tutorial_open'::text, 'product_open'::text, 'follow_click'::text, 'follow_added'::text, 'follow_removed'::text, 'signup_submitted'::text, 'newsletter_subscribed'::text, 'project_request_submitted'::text, 'collaboration_submitted'::text, 'cart_added'::text, 'save_added'::text, 'save_removed'::text, 'community_post_attempt'::text])`),
   check("site_engagement_events_pathname_check", sql`length(pathname) BETWEEN 1 AND 240 AND pathname ~ '^/[A-Za-z0-9._~/%-]*$'`),
   check("site_engagement_events_entity_slug_check", sql`entity_slug IS NULL OR (length(entity_slug) <= 120 AND entity_slug ~ '^[a-z0-9]+(?:-[a-z0-9]+)*$')`),
 ]);

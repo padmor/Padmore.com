@@ -13,7 +13,7 @@ CREATE TABLE public.site_engagement_events (
         'follow_click',
         'follow_added',
         'follow_removed',
-        'signup_completed',
+        'signup_submitted',
         'newsletter_subscribed',
         'project_request_submitted',
         'collaboration_submitted',

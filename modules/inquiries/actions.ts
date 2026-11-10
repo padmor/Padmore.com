@@ -126,8 +126,8 @@ export async function subscribeAction(_: PublicFormState, formData: FormData): P
   const parsed = newsletterSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) return { error: parsed.error.issues[0]?.message };
   try {
-    await serverDb.insert(newsletterSubscribers).values({ email: parsed.data.email, source: "website" }).onConflictDoNothing();
-    await recordEngagementEvent("newsletter_subscribed", "/");
+    const inserted = await serverDb.insert(newsletterSubscribers).values({ email: parsed.data.email, source: "website" }).onConflictDoNothing().returning({ id: newsletterSubscribers.id });
+    if (inserted.length > 0) await recordEngagementEvent("newsletter_subscribed", "/");
     return { sent: true };
   } catch {
     return { error: FAILED };
