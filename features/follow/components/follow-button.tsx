@@ -36,7 +36,6 @@ export function FollowButton({ compact = false }: { compact?: boolean }) {
       if ("error" in result) { setState(before); setError(result.error); }
       else {
         setState({ ...before, ...result });
-        trackEngagement(result.following ? "follow_added" : "follow_removed", "/");
       }
     });
   }

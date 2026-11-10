@@ -3248,3 +3248,61 @@ body::after {
 .engagement-privacy-note { margin-top: 14px; color: var(--muted); font-size: 11px; line-height: 1.6; }
 @media (max-width: 900px) { .engagement-stats { grid-template-columns: repeat(2,minmax(0,1fr)); } }
 @media (max-width: 560px) { .engagement-stats { grid-template-columns: 1fr 1fr; gap: 8px; } }
+
+
+/* Engagement calls to action and learning journeys. */
+.home-follow-card,
+.follow-engagement-card {
+  display: grid;
+  grid-template-columns: minmax(0,1.2fr) minmax(230px,.8fr);
+  align-items: center;
+  gap: 24px;
+  padding: clamp(20px,3vw,30px);
+  border: 1px solid #dfe8fb;
+  border-radius: 21px;
+  background: radial-gradient(ellipse at 95% 5%, rgba(127,151,255,.12), transparent 34%), linear-gradient(115deg,#f1f5ff,#fbfcff 72%);
+  box-shadow: 0 8px 25px rgba(31,55,108,.045);
+}
+.home-follow-eyebrow { display:inline-flex; align-items:center; gap:7px; color:#4169f5; font-size:10px; font-weight:850; letter-spacing:.13em; }
+.home-follow-eyebrow svg { width:14px; height:14px; }
+.home-follow-copy h2,.follow-engagement-copy h2 { margin:8px 0 6px; color:var(--text); font-size:clamp(19px,2.2vw,25px); font-weight:780; line-height:1.15; letter-spacing:-.045em; }
+.home-follow-copy p,.follow-engagement-copy p { max-width:650px; margin:0; color:var(--text-soft); font-size:12.5px; line-height:1.7; }
+.home-follow-actions,.follow-engagement-actions { display:flex; flex-wrap:wrap; align-items:center; gap:12px; margin-top:17px; }
+.home-follow-actions .button,.follow-engagement-actions .button { min-height:39px; border-radius:999px; }
+.home-follow-secondary { display:inline-flex; min-height:39px; align-items:center; gap:6px; color:var(--primary); font-size:11.5px; font-weight:750; }
+.home-follow-secondary svg { width:14px; height:14px; }
+.home-follow-benefits,.follow-engagement-benefits { display:grid; gap:10px; }
+.home-follow-benefits>div,.follow-engagement-benefits>div { display:flex; align-items:center; gap:10px; min-width:0; }
+.home-follow-benefits>div>span,.follow-engagement-benefits>div>span { display:grid; width:35px; height:35px; flex:0 0 auto; place-items:center; border:1px solid rgba(65,105,245,.11); border-radius:11px; color:#4169f5; background:rgba(255,255,255,.8); }
+.home-follow-benefits svg,.follow-engagement-benefits svg { width:16px; height:16px; }
+.home-follow-benefits strong { display:block; color:var(--text); font-size:11.5px; }
+.home-follow-benefits small,.follow-engagement-benefits small { display:block; color:var(--muted); font-size:10.5px; line-height:1.45; }
+.follow-engagement-card { margin-top:34px; }
+.follow-engagement-copy>.eyebrow { color:var(--primary); font-size:10px; letter-spacing:.13em; }
+.follow-engagement-copy h2 { margin-top:8px; }
+.follow-engagement-benefits { padding-left:20px; border-left:1px solid rgba(65,105,245,.12); }
+.related-learning,.related-projects { margin-top:38px; }
+.related-learning .section-heading h2,.related-projects .section-heading h2 { font-size:20px; font-weight:780; letter-spacing:-.04em; }
+.related-learning .section-heading p,.related-projects .section-heading p { margin-top:4px; color:var(--muted); font-size:12px; }
+.learning-next-step { display:flex; align-items:center; justify-content:space-between; gap:18px; margin-top:36px; padding:22px; border:1px solid var(--border); border-radius:17px; background:var(--bg-soft); }
+.learning-next-step>div { min-width:0; }
+.learning-next-step h2 { margin:5px 0 4px; font-size:18px; font-weight:780; letter-spacing:-.035em; }
+.learning-next-step p { margin:0; color:var(--text-soft); font-size:12px; line-height:1.6; }
+.learning-next-step .button { flex:0 0 auto; min-height:40px; }
+.product-release-link { display:inline-flex; align-items:center; gap:6px; margin-top:11px; color:var(--primary); font-size:12px; font-weight:750; }
+.product-release-link svg { width:14px; height:14px; }
+:root[data-theme="dark"] .home-follow-card,:root[data-theme="dark"] .follow-engagement-card { border-color:var(--border); background:linear-gradient(115deg,var(--surface),var(--bg-soft)); }
+:root[data-theme="dark"] .home-follow-benefits>div>span,:root[data-theme="dark"] .follow-engagement-benefits>div>span { border-color:var(--border); color:#a8bcff; background:var(--bg-soft); }
+:root[data-theme="dark"] .learning-next-step { border-color:var(--border); background:var(--bg-soft); }
+@media (max-width:760px) {
+  .home-follow-card,.follow-engagement-card { grid-template-columns:1fr; gap:17px; }
+  .follow-engagement-benefits { padding:15px 0 0; border-top:1px solid rgba(65,105,245,.12); border-left:0; grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .learning-next-step { align-items:flex-start; flex-direction:column; padding:17px; }
+  .learning-next-step .button { width:100%; }
+}
+@media (max-width:480px) {
+  .home-follow-card,.follow-engagement-card { padding:17px; border-radius:17px; }
+  .home-follow-actions,.follow-engagement-actions { align-items:stretch; flex-direction:column; }
+  .home-follow-actions>*,.follow-engagement-actions>* { width:100%; }
+  .follow-engagement-benefits { grid-template-columns:1fr; }
+}

@@ -41,7 +41,7 @@ export default async function EngagementPage() {
         <>
           <div className="admin-stats engagement-stats">
             {cards.map(([key, label, note]) => (
-              <MetricCard key={key} label={label} value={snapshot.counts[key]} note={note}/>
+              <MetricCard key={key} label={label} value={String(snapshot.counts[key])} note={note}/>
             ))}
           </div>
 

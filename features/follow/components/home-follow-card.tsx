@@ -8,7 +8,7 @@ export function HomeFollowCard() {
       <div className="home-follow-copy">
         <span className="home-follow-eyebrow"><Sparkles aria-hidden="true"/> STAY CONNECTED</span>
         <h2 id="home-follow-title">Enjoying what you see?</h2>
-        <p>Follow my work to keep up with new projects, practical tutorials and product releases. Create a free account to save things you want to revisit.</p>
+        <p>Follow my work to keep up with new projects, practical tutorials and updates. Create a free account to save things you want to revisit.</p>
         <div className="home-follow-actions">
           <FollowButton/>
           <Link href="/tutorials" className="home-follow-secondary">Explore tutorials <ArrowRight aria-hidden="true"/></Link>
