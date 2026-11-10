@@ -3134,3 +3134,100 @@ button[aria-busy="true"] > svg { margin-left: 0; }
   .profile-footer-actions { align-items: stretch; flex-direction: column; }
   .profile-footer-actions .button { width: 100%; }
 }
+
+
+/* Ambient background motion: slow, low-contrast movement behind the interface.
+   It uses CSS only, stays out of the pointer/accessibility tree, and pauses for
+   visitors who request reduced motion. */
+html { background: var(--bg); }
+body { position: relative; }
+body::before,
+body::after {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  content: "";
+  pointer-events: none;
+}
+body::before {
+  inset: -18%;
+  background:
+    radial-gradient(ellipse at 18% 22%, rgba(84, 133, 255, .105) 0%, transparent 36%),
+    radial-gradient(ellipse at 78% 18%, rgba(132, 105, 245, .085) 0%, transparent 34%),
+    radial-gradient(ellipse at 68% 78%, rgba(64, 173, 224, .075) 0%, transparent 38%),
+    radial-gradient(ellipse at 12% 86%, rgba(117, 150, 255, .065) 0%, transparent 32%);
+  filter: blur(25px);
+  transform: translate3d(0,0,0) scale(1);
+  animation: ambient-colour-drift 34s ease-in-out infinite alternate;
+  will-change: transform;
+}
+body::after {
+  inset: 0;
+  background-image: radial-gradient(rgba(77, 111, 177, .105) .7px, transparent .7px);
+  background-size: 34px 34px;
+  background-position: 0 0;
+  opacity: .22;
+  mask-image: radial-gradient(ellipse at 50% 36%, #000 0%, rgba(0,0,0,.75) 42%, transparent 84%);
+  animation: ambient-particle-drift 72s linear infinite;
+}
+.site-header { position: sticky; z-index: 80; }
+.site-main { position: relative; z-index: 2; }
+.site-footer { position: relative; z-index: 2; }
+
+@keyframes ambient-colour-drift {
+  0% {
+    transform: translate3d(-1.5%, -1%, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(1.2%, 1.3%, 0) scale(1.035);
+  }
+  100% {
+    transform: translate3d(-.4%, 2%, 0) scale(1.015);
+  }
+}
+@keyframes ambient-particle-drift {
+  from { background-position: 0 0; }
+  to { background-position: 68px 48px; }
+}
+
+/* Let the homepage hero's existing soft shape move independently. */
+.home-hero-section::before {
+  animation: home-hero-orbit 26s ease-in-out infinite alternate;
+  will-change: transform;
+}
+@keyframes home-hero-orbit {
+  0% { transform: translate3d(0,0,0) rotate(0deg); }
+  100% { transform: translate3d(-24px,18px,0) rotate(9deg); }
+}
+.home-hero-photo-decoration {
+  animation: home-photo-float 9s ease-in-out infinite alternate;
+  will-change: transform;
+}
+@keyframes home-photo-float {
+  from { transform: translate3d(0,0,0) rotate(7deg); }
+  to { transform: translate3d(0,-9px,0) rotate(9deg); }
+}
+
+:root[data-theme="dark"] body::before {
+  background:
+    radial-gradient(ellipse at 18% 22%, rgba(70, 112, 220, .18) 0%, transparent 36%),
+    radial-gradient(ellipse at 78% 18%, rgba(112, 82, 206, .15) 0%, transparent 34%),
+    radial-gradient(ellipse at 68% 78%, rgba(42, 137, 180, .12) 0%, transparent 38%),
+    radial-gradient(ellipse at 12% 86%, rgba(80, 111, 211, .1) 0%, transparent 32%);
+}
+:root[data-theme="dark"] body::after {
+  background-image: radial-gradient(rgba(154, 180, 235, .13) .7px, transparent .7px);
+  opacity: .16;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before,
+  body::after,
+  .home-hero-section::before,
+  .home-hero-photo-decoration {
+    animation: none !important;
+    transform: none !important;
+    will-change: auto;
+  }
+}
