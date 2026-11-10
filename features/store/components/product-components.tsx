@@ -6,12 +6,14 @@ import { useCart } from "@/features/store/providers/cart-provider";
 import { useState } from "react";
 import { CoverImage } from "@/features/content/components/site-image";
 import { Icon } from "@/components/icon";
+import { trackEngagement } from "@/lib/engagement/client";
 
 export function AddToCartButton({ product }: { product: Product }) {
   const { add } = useCart();
   const [added, setAdded] = useState(false);
   function handleAdd() {
     add({ slug: product.slug, title: product.title, price: product.price });
+    trackEngagement("cart_added", `/store/${product.slug}`, product.slug);
     setAdded(true);
     window.setTimeout(() => setAdded(false), 1800);
   }
@@ -69,12 +71,12 @@ export function ProductCatalog({ products }: { products: Product[] }) {
         <div className="product-grid">
           {filtered.map((product) => (
             <article className="product-card" key={product.slug}>
-              <Link href={`/store/${product.slug}`} className="product-image-link" aria-label={`View ${product.title}`}>
+              <Link href={`/store/${product.slug}`} className="product-image-link" aria-label={`View ${product.title}`} onClick={() => trackEngagement("product_open", `/store/${product.slug}`, product.slug)}>
                 <CoverImage id={product.imageId} alt={product.title}/>
               </Link>
               <div className="product-info">
                 <span className="eyebrow">{product.category}</span>
-                <h3><Link href={`/store/${product.slug}`}>{product.title}</Link></h3>
+                <h3><Link href={`/store/${product.slug}`} onClick={() => trackEngagement("product_open", `/store/${product.slug}`, product.slug)}>{product.title}</Link></h3>
                 <p>{product.description}</p>
                 <div className="product-buy-row">
                   <strong>{formatPrice(product.price)}</strong>

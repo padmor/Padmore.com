@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { HeroIntro } from "@/features/home/components/hero-intro";
 import { HeroVisual } from "@/features/home/components/hero-visual";
 import { HomeChangesPanel } from "@/features/home/components/home-changes-panel";
+import { HomeFollowCard } from "@/features/follow/components/home-follow-card";
 import { ProjectShowcaseCard } from "@/features/projects/components/project-showcase-card";
 import { TutorialCard } from "@/features/tutorials/components/tutorial-card";
 import { SectionHeading } from "@/components/page-intro";
@@ -101,6 +102,8 @@ export default async function HomePage() {
           ))}
         </div>
       </section>
+
+      <div className="page-container home-page-section"><HomeFollowCard/></div>
 
       <section className="page-container home-page-section home-tutorial-section" aria-label="Latest tutorials">
         <SectionHeading

@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import type { Project } from "@/lib/data";
 import { CoverImage, isUnderConstruction, SiteImage } from "@/features/content/components/site-image";
 import { BookmarkButton } from "@/features/projects/components/bookmark-button";
+import { trackEngagement } from "@/lib/engagement/client";
 
 export function StatusBadge({ status }: { status: string }) {
   const type = status.toLowerCase().replaceAll(" ", "-");
@@ -38,7 +39,7 @@ export function ProjectCard({ project, variant = "default" }: { project: Project
 
         <div className="project-card-content">
           <div className="project-card-heading">
-            <h3><Link href={"/projects/" + project.slug} className="project-card-link">{project.title}</Link></h3>
+            <h3><Link href={"/projects/" + project.slug} className="project-card-link" onClick={() => trackEngagement("project_open", `/projects/${project.slug}`, project.slug)}>{project.title}</Link></h3>
             <BookmarkButton id={project.slug} />
           </div>
           <p className="project-card-featured-description">{project.description || project.type}</p>
