@@ -4,6 +4,7 @@ import type { Project } from "@/lib/data";
 import { CoverImage, isUnderConstruction, SiteImage } from "@/features/content/components/site-image";
 import { BookmarkButton } from "@/features/projects/components/bookmark-button";
 import { trackEngagement } from "@/lib/engagement/client";
+import { RecentlyViewedLink } from "@/features/engagement/components/recently-viewed";
 
 export function StatusBadge({ status }: { status: string }) {
   const type = status.toLowerCase().replaceAll(" ", "-");
@@ -39,7 +40,7 @@ export function ProjectCard({ project, variant = "default" }: { project: Project
 
         <div className="project-card-content">
           <div className="project-card-heading">
-            <h3><Link href={"/projects/" + project.slug} className="project-card-link" onClick={() => trackEngagement("project_open", `/projects/${project.slug}`, project.slug)}>{project.title}</Link></h3>
+            <h3><RecentlyViewedLink kind="project" slug={project.slug} title={project.title} href={"/projects/" + project.slug} className="project-card-link"><span onClick={() => trackEngagement("project_open", `/projects/${project.slug}`, project.slug)}>{project.title}</span></RecentlyViewedLink></h3>
             <BookmarkButton id={project.slug} />
           </div>
           <p className="project-card-featured-description">{project.description || project.type}</p>
@@ -56,7 +57,7 @@ export function ProjectCard({ project, variant = "default" }: { project: Project
       <div className="project-card-media"><CoverImage id={project.imageId} alt={project.title} building={isUnderConstruction(project.status)}/></div>
       <div className="project-card-content">
         <div className="project-card-heading">
-          <h3><Link href={"/projects/" + project.slug} className="project-card-link">{project.title}</Link></h3>
+          <h3><RecentlyViewedLink kind="project" slug={project.slug} title={project.title} href={"/projects/" + project.slug} className="project-card-link">{project.title}</RecentlyViewedLink></h3>
           <BookmarkButton id={project.slug}/>
         </div>
         <p className="project-card-meta">{project.type}<span aria-hidden="true"> · </span><span className={"project-card-status is-" + status}>{project.status}</span></p>

@@ -8,6 +8,7 @@ import { FollowButton } from "@/features/follow/components/follow-button";
 import { getFollowedSince, listFollowFeed, type FeedItem } from "@/modules/follow/feed";
 import { listSavedItems, type SavedItem } from "@/modules/saved/repository";
 import { SubmitButton } from "@/components/submit-button";
+import { RecentlyViewed } from "@/features/engagement/components/recently-viewed";
 
 export const metadata = { title: "Member dashboard" };
 export const dynamic = "force-dynamic";
@@ -62,6 +63,8 @@ export default async function MemberDashboardPage() {
           <div className="dashboard-stat-grid">
             {stats.map((item) => <div className="dashboard-stat" key={item.label}><span><Icon name={item.icon}/></span><strong>{item.value}</strong><small>{item.label}</small></div>)}
           </div>
+
+          <RecentlyViewed/>
 
           {steps.some((step) => !step.done) && (
             <section className="dashboard-box" aria-labelledby="start-heading">

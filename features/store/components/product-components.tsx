@@ -7,6 +7,7 @@ import { useState } from "react";
 import { CoverImage } from "@/features/content/components/site-image";
 import { Icon } from "@/components/icon";
 import { trackEngagement } from "@/lib/engagement/client";
+import { RecentlyViewedLink } from "@/features/engagement/components/recently-viewed";
 
 export function AddToCartButton({ product }: { product: Product }) {
   const { add } = useCart();
@@ -71,12 +72,12 @@ export function ProductCatalog({ products }: { products: Product[] }) {
         <div className="product-grid">
           {filtered.map((product) => (
             <article className="product-card" key={product.slug}>
-              <Link href={`/store/${product.slug}`} className="product-image-link" aria-label={`View ${product.title}`} onClick={() => trackEngagement("product_open", `/store/${product.slug}`, product.slug)}>
+              <RecentlyViewedLink kind="product" slug={product.slug} title={product.title} href={`/store/${product.slug}`} className="product-image-link">
                 <CoverImage id={product.imageId} alt={product.title}/>
-              </Link>
+              </RecentlyViewedLink>
               <div className="product-info">
                 <span className="eyebrow">{product.category}</span>
-                <h3><Link href={`/store/${product.slug}`} onClick={() => trackEngagement("product_open", `/store/${product.slug}`, product.slug)}>{product.title}</Link></h3>
+                <h3><RecentlyViewedLink kind="product" slug={product.slug} title={product.title} href={`/store/${product.slug}`} onClick={() => trackEngagement("product_open", `/store/${product.slug}`, product.slug)}>{product.title}</RecentlyViewedLink></h3>
                 <p>{product.description}</p>
                 <div className="product-buy-row">
                   <strong>{formatPrice(product.price)}</strong>

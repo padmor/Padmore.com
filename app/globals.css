@@ -3306,3 +3306,9 @@ body::after {
   .home-follow-actions>*,.follow-engagement-actions>* { width:100%; }
   .follow-engagement-benefits { grid-template-columns:1fr; }
 }
+
+
+/* Recently viewed panel in member dashboard. */
+.recently-viewed-box { margin-top: 16px; }
+.recently-viewed-box .section-heading { align-items: center; }
+.recently-viewed-box .catalog-clear { flex: 0 0 auto; }

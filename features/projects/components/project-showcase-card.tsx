@@ -3,6 +3,7 @@ import { ArrowUpRight, ExternalLink } from "lucide-react";
 import { SiteImage } from "@/features/content/components/site-image";
 import type { ResolvedPortfolioShowcase } from "@/modules/portfolio/showcases";
 import { trackEngagement } from "@/lib/engagement/client";
+import { RecentlyViewedLink } from "@/features/engagement/components/recently-viewed";
 
 export function ProjectShowcaseArtwork({ project, imageId }: { project: ResolvedPortfolioShowcase; imageId?: string }) {
   if (imageId) {
@@ -20,21 +21,21 @@ export function ProjectShowcaseArtwork({ project, imageId }: { project: Resolved
 export function ProjectShowcaseCard({ project }: { project: ResolvedPortfolioShowcase }) {
   return (
     <article className="project-showcase-card">
-      <Link href={`/work/${project.slug}`} className="project-showcase-media" aria-label={`View ${project.title} project overview`} onClick={() => trackEngagement("project_open", `/work/${project.slug}`, project.slug)}>
+      <RecentlyViewedLink kind="project" slug={project.slug} title={project.title} href={`/work/${project.slug}`} className="project-showcase-media">
         <ProjectShowcaseArtwork project={project} imageId={project.imageId} />
         <span className={`project-showcase-status is-${project.statusTone}`}>
           <i aria-hidden="true" />{project.status}
         </span>
-      </Link>
+      </RecentlyViewedLink>
 
       <div className="project-showcase-content">
         <span className="project-showcase-subtitle">{project.subtitle}</span>
-        <h3><Link href={`/work/${project.slug}`} onClick={() => trackEngagement("project_open", `/work/${project.slug}`, project.slug)}>{project.title}</Link></h3>
+        <h3><RecentlyViewedLink kind="project" slug={project.slug} title={project.title} href={`/work/${project.slug}`}>{project.title}</RecentlyViewedLink></h3>
         <p>{project.description}</p>
         <div className="project-showcase-actions">
-          <Link href={`/work/${project.slug}`} className="project-showcase-details" onClick={() => trackEngagement("project_open", `/work/${project.slug}`, project.slug)}>
+          <RecentlyViewedLink kind="project" slug={project.slug} title={project.title} href={`/work/${project.slug}`} className="project-showcase-details">
             View project <ArrowUpRight aria-hidden="true" />
-          </Link>
+          </RecentlyViewedLink>
           {project.slug === "gbhpl" && project.websiteUrl && (
             <a href={project.websiteUrl} target="_blank" rel="noopener noreferrer" aria-label="Visit GBHPL live website">
               Live site <ExternalLink aria-hidden="true" />
