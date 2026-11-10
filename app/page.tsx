@@ -4,11 +4,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { HeroIntro } from "@/features/home/components/hero-intro";
 import { HeroVisual } from "@/features/home/components/hero-visual";
-import { ProjectCard } from "@/features/projects/components/project-card";
+import { ProjectShowcaseCard } from "@/features/projects/components/project-showcase-card";
 import { TutorialCard } from "@/features/tutorials/components/tutorial-card";
 import { SectionHeading } from "@/components/page-intro";
 import { getAbout, listPublicTutorials } from "@/modules/content/repository";
 import { listPublicProjects } from "@/modules/portfolio/repository";
+import { resolvePortfolioShowcases } from "@/modules/portfolio/showcases";
 
 export const revalidate = 300;
 
@@ -21,7 +22,7 @@ export default async function HomePage() {
 
   const location = about.location || "Ghana";
   const featured = projects.filter((project) => project.featured).slice(0, 4);
-  const homeProjects = featured.length > 0 ? featured : projects.slice(0, 4);
+  const homeProjects = resolvePortfolioShowcases(projects);
   const heroPhotoId = about.hero_photo_id ?? about.photo_id ?? null;
 
   return (
@@ -80,16 +81,16 @@ export default async function HomePage() {
         />
       </section>
 
-      <section className="page-container home-page-section" aria-label="Featured projects">
+      <section id="featured-projects" className="page-container home-page-section" aria-label="Featured projects">
         <SectionHeading
           title="Featured Projects"
-          description="A selection of my recent work and personal projects."
+          description="Selected websites and digital products I have worked on."
           href="/projects"
           linkLabel="View all projects"
         />
-        <div className="project-grid home-project-grid">
+        <div className="project-showcase-grid home-project-showcase-grid">
           {homeProjects.map((project) => (
-            <ProjectCard key={project.slug} project={project} variant="featured" />
+            <ProjectShowcaseCard key={project.slug} project={project} />
           ))}
         </div>
       </section>
