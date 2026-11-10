@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowUpRight, Check, ExternalLink } from "lucide-react";
-import { getPortfolioShowcase, PORTFOLIO_SHOWCASES } from "@/modules/portfolio/showcases";
+import { getPortfolioShowcase, PORTFOLIO_SHOWCASES, resolvePortfolioShowcases } from "@/modules/portfolio/showcases";
+import { listPublicProjects } from "@/modules/portfolio/repository";
 import { ProjectShowcaseArtwork } from "@/features/projects/components/project-showcase-card";
 
 export const revalidate = 3600;
@@ -25,6 +26,11 @@ export default async function WorkShowcasePage({ params }: { params: Promise<{ s
   const { slug } = await params;
   const project = getPortfolioShowcase(slug);
   if (!project) notFound();
+
+  // Reuse a real uploaded cover from the public project catalogue when a
+  // corresponding database entry exists; otherwise the editorial cover remains.
+  const publicProjects = await listPublicProjects().catch(() => []);
+  const resolved = resolvePortfolioShowcases(publicProjects).find((item) => item.slug === slug) ?? project;
 
   return (
     <section className="page-container showcase-detail-page">
@@ -53,7 +59,7 @@ export default async function WorkShowcasePage({ params }: { params: Promise<{ s
         </div>
 
         <div className="showcase-detail-art">
-          <ProjectShowcaseArtwork project={project} />
+          <ProjectShowcaseArtwork project={resolved} imageId={resolved.imageId} />
         </div>
       </header>
 

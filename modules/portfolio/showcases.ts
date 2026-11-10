@@ -91,20 +91,25 @@ function normalize(value: string) {
 
 export type ResolvedPortfolioShowcase = PortfolioShowcase & {
   imageId?: string;
-  databaseProjectHref?: string;
 };
 
 export function resolvePortfolioShowcases(projects: Project[] = []): ResolvedPortfolioShowcase[] {
   return PORTFOLIO_SHOWCASES.map((showcase) => {
     const match = projects.find((project) => {
       const searchable = normalize(project.title + project.slug);
-      return showcase.matchTerms.some((term) => searchable.includes(normalize(term)));
+      return showcase.matchTerms.some((term) => {
+        if (term.length <= 3) {
+          const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, "\\      const searchable = normalize(project.title + project.slug);
+      return showcase.matchTerms.some((term) => searchable.includes(normalize(term)));");
+          return new RegExp(`(^|[^a-z0-9])${escaped}($|[^a-z0-9])`, "i").test(project.title + " " + project.slug);
+        }
+        return searchable.includes(normalize(term));
+      });
     });
 
     return {
       ...showcase,
       imageId: match?.imageId,
-      databaseProjectHref: match ? `/projects/${match.slug}` : undefined,
     };
   });
 }

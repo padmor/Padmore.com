@@ -21,7 +21,6 @@ export default async function HomePage() {
   ]);
 
   const location = about.location || "Ghana";
-  const featured = projects.filter((project) => project.featured).slice(0, 4);
   const homeProjects = resolvePortfolioShowcases(projects);
   const heroPhotoId = about.hero_photo_id ?? about.photo_id ?? null;
 

@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { ArrowUpRight, ExternalLink } from "lucide-react";
 import { SiteImage } from "@/features/content/components/site-image";
