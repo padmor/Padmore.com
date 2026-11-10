@@ -72,7 +72,7 @@ export function ProductCatalog({ products }: { products: Product[] }) {
         <div className="product-grid">
           {filtered.map((product) => (
             <article className="product-card" key={product.slug}>
-              <RecentlyViewedLink kind="product" slug={product.slug} title={product.title} href={`/store/${product.slug}`} className="product-image-link">
+              <RecentlyViewedLink kind="product" slug={product.slug} title={product.title} href={`/store/${product.slug}`} className="product-image-link" onClick={() => trackEngagement("product_open", `/store/${product.slug}`, product.slug)}>
                 <CoverImage id={product.imageId} alt={product.title}/>
               </RecentlyViewedLink>
               <div className="product-info">
