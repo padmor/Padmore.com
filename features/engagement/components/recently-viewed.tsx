@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState, type ReactNode } from "react";
 import { Icon } from "@/components/icon";
+import { trackEngagement } from "@/lib/engagement/client";
 
 export type RecentItemKind = "project" | "tutorial" | "product";
 export type RecentItem = {
@@ -60,7 +61,7 @@ export function RecentlyViewedLink({
   href,
   className,
   children,
-  onClick,
+  engagementEvent,
 }: {
   kind: RecentItemKind;
   slug: string;
@@ -68,7 +69,7 @@ export function RecentlyViewedLink({
   href: string;
   className?: string;
   children: ReactNode;
-  onClick?: () => void;
+  engagementEvent?: "project_open" | "tutorial_open" | "product_open";
 }) {
   return (
     <Link
@@ -76,7 +77,7 @@ export function RecentlyViewedLink({
       className={className}
       onClick={() => {
         rememberRecentlyViewed({ kind, slug, title, href });
-        onClick?.();
+        if (engagementEvent) trackEngagement(engagementEvent, href, slug);
       }}
     >
       {children}
