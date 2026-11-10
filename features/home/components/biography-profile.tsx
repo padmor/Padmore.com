@@ -57,7 +57,7 @@ export function BiographyProfile({ about, achievements, projectCount, showFullSt
   const numbers = [
     { value: String(projectCount), label: "Projects" },
     { value: String(education.length), label: education.length === 1 ? "School" : "Schools" },
-    { value: String(achievements.length), label: achievements.length === 1 ? "Certificate" : "Certificates" },
+    { value: String(achievements.length), label: "Credentials & milestones" },
     { value: String(about.skills.length), label: "Skills" },
   ].filter((item) => item.value !== "0");
   let step = 0;

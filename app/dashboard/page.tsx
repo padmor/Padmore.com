@@ -17,8 +17,10 @@ const date = (iso: string) => new Date(iso).toLocaleDateString("en-GB", { day: "
 
 export default async function MemberDashboardPage() {
   const user = await requireUser();
-  // Each part loads on its own, so one problem never empties the whole dashboard.
-  const [saved, followedSince] = await Promise.all([listSavedItems(user.id).catch((): SavedItem[] => []), getFollowedSince(user.id).catch(() => null)]);
+  const [saved, followedSince] = await Promise.all([
+    listSavedItems(user.id).catch((): SavedItem[] => []),
+    getFollowedSince(user.id).catch(() => null),
+  ]);
   const feed: FeedItem[] = followedSince ? await listFollowFeed(followedSince).catch((): FeedItem[] => []) : [];
 
   const steps = [
@@ -33,52 +35,101 @@ export default async function MemberDashboardPage() {
     { label: "Requests", value: "—", icon: "briefcase" as const },
   ];
 
-  return <section className="page-container content-page">
-    <PageIntro eyebrow="MY ACCOUNT" title={`Welcome back, ${user.name}`} description="Your saved items and what is new from Padmore Yeb."/>
-    <form action={signOutAction}><SubmitButton className="button button-small" type="submit">Sign out</SubmitButton></form>
-    <div className="member-dashboard-grid">
-      <aside className="dashboard-nav">
-        <strong>My account</strong>
-        <a className="active" href="#overview"><Icon name="home"/> Overview</a>
-        <a href="/profile"><Icon name="user"/> My profile</a>
-        <a href="#saved"><Icon name="bookmark"/> Saved items</a>
-        <a href="#activity"><Icon name="bell"/> What&apos;s new</a>
-      </aside>
-      <div className="dashboard-content" id="overview">
-        <div className="dashboard-welcome"><div><h2>Your activity, in one place.</h2><p>Everything you save and follow shows up here.</p></div><span className="welcome-avatar">{user.name.slice(0, 2).toUpperCase()}</span></div>
-        <div className="dashboard-stat-grid">{stats.map((item) => <div className="dashboard-stat" key={item.label}><span><Icon name={item.icon}/></span><strong>{item.value}</strong><small>{item.label}</small></div>)}</div>
+  return (
+    <section className="page-container content-page member-home">
+      <PageIntro
+        eyebrow="MY ACCOUNT"
+        title={`Welcome back, ${user.name}`}
+        description="Your saved items, followed updates and account activity in one place."
+        action={<form action={signOutAction}><SubmitButton className="button button-outline button-small" type="submit">Sign out</SubmitButton></form>}
+      />
 
-        {steps.some((step) => !step.done) && <section className="dashboard-box" aria-labelledby="start-heading">
-          <div className="section-heading"><div><h2 id="start-heading">Get started</h2><p>Three quick things to get the most from the site.</p></div></div>
-          <ul data-tw className="grid gap-2">{steps.map((step) => <li key={step.label}><Link href={step.href} className="flex items-center gap-3 rounded-xl border border-border bg-card px-4 py-3 text-sm font-medium text-foreground transition hover:border-primary/40">
-            <span className={`grid size-6 shrink-0 place-items-center rounded-full border ${step.done ? "border-success bg-success text-white" : "border-border-strong"}`}>{step.done && <Check className="size-3.5"/>}</span>
-            <span className={step.done ? "text-muted-foreground line-through" : ""}>{step.label}</span>
-          </Link></li>)}</ul>
-        </section>}
+      <div className="member-dashboard-grid">
+        <aside className="dashboard-nav" aria-label="Member navigation">
+          <strong>My account</strong>
+          <a className="active" href="#overview"><Icon name="home"/> Overview</a>
+          <a href="/profile"><Icon name="user"/> My profile</a>
+          <a href="#saved"><Icon name="bookmark"/> Saved items</a>
+          <a href="#activity"><Icon name="bell"/> What&apos;s new</a>
+        </aside>
 
-        <section className="dashboard-box" id="saved">
-          <div className="section-heading"><div><h2>Saved items</h2><p>Projects and tutorials you have saved.</p></div></div>
-          {saved.length > 0
-            ? <ul data-tw className="grid gap-2">{saved.map((item) => <li key={`${item.kind}:${item.slug}`}><Link href={item.href} className="flex items-center justify-between gap-4 rounded-xl border border-border bg-card px-4 py-3 transition hover:border-primary/40">
-              <span className="min-w-0"><strong className="block truncate text-[15px] font-semibold text-foreground">{item.title}</strong><small className="text-xs text-muted-foreground">{KIND_LABEL[item.kind]} · saved {date(item.savedAt)}</small></span>
-              <Icon name="arrow" size={15}/>
-            </Link></li>)}</ul>
-            : <div className="dashboard-empty"><Icon name="bookmark" size={24}/><strong>No saved items yet</strong><p>Use the bookmark on any project or tutorial to keep it here.</p><Link className="text-link" href="/tutorials">Browse tutorials →</Link></div>}
-        </section>
+        <div className="dashboard-content" id="overview">
+          <div className="dashboard-welcome">
+            <div><span className="eyebrow">YOUR SPACE</span><h2>Your activity, in one place.</h2><p>Everything you save and follow shows up here.</p></div>
+            <span className="welcome-avatar">{user.name.slice(0, 2).toUpperCase()}</span>
+          </div>
 
-        <section className="dashboard-box" id="activity">
-          <div className="section-heading"><div><h2>What&apos;s new</h2><p>Tutorials, projects and updates published since you followed.</p></div></div>
-          {!followedSince
-            ? <div className="dashboard-empty"><Icon name="bell" size={24}/><strong>Follow to see what is new</strong><p>New tutorials and projects will appear here as they are published.</p><span data-tw><FollowButton/></span></div>
-            : feed.length > 0
-              ? <ul data-tw className="grid gap-2">{feed.map((item) => <li key={`${item.kind}:${item.href}:${item.at}`}><Link href={item.href} className="flex items-center justify-between gap-4 rounded-xl border border-border bg-card px-4 py-3 transition hover:border-primary/40">
-                <span className="min-w-0"><strong className="block truncate text-[15px] font-semibold text-foreground">{item.title}</strong><small className="text-xs text-muted-foreground">New {KIND_LABEL[item.kind].toLowerCase()} · {date(item.at)}</small></span>
-                <Icon name="arrow" size={15}/>
-              </Link></li>)}</ul>
-              : <div className="dashboard-empty compact-empty"><p>You are following. Nothing new has been published yet, and it will show here when it is.</p></div>}
-        </section>
+          <div className="dashboard-stat-grid">
+            {stats.map((item) => <div className="dashboard-stat" key={item.label}><span><Icon name={item.icon}/></span><strong>{item.value}</strong><small>{item.label}</small></div>)}
+          </div>
+
+          {steps.some((step) => !step.done) && (
+            <section className="dashboard-box" aria-labelledby="start-heading">
+              <div className="section-heading"><div><h2 id="start-heading">Get started</h2><p>Three simple ways to get more from the site.</p></div></div>
+              <ul data-tw className="grid gap-2">
+                {steps.map((step) => (
+                  <li key={step.label}>
+                    <Link href={step.href} className="dashboard-action-link">
+                      <span className={`dashboard-step-check ${step.done ? "is-done" : ""}`}>{step.done && <Check className="size-3.5"/>}</span>
+                      <span>{step.label}</span><Icon name="arrow" size={15}/>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          <section className="dashboard-box" id="saved">
+            <div className="section-heading"><div><h2>Saved items</h2><p>Projects and tutorials you have saved.</p></div></div>
+            {saved.length > 0 ? (
+              <ul data-tw className="dashboard-link-list">
+                {saved.map((item) => (
+                  <li key={`${item.kind}:${item.slug}`}>
+                    <Link href={item.href} className="dashboard-item-link">
+                      <span className="dashboard-item-icon"><Icon name={item.kind === "tutorial" ? "book" : "bookmark"}/></span>
+                      <span className="dashboard-item-copy"><strong>{item.title}</strong><small>{KIND_LABEL[item.kind]} · saved {date(item.savedAt)}</small></span>
+                      <Icon name="arrow" size={15}/>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="dashboard-empty">
+                <Icon name="bookmark" size={24}/><strong>No saved items yet</strong>
+                <p>Use the bookmark on any project or tutorial to keep it here.</p>
+                <Link className="text-link" href="/projects">Browse projects →</Link>
+              </div>
+            )}
+          </section>
+
+          <section className="dashboard-box" id="activity">
+            <div className="section-heading"><div><h2>What&apos;s new</h2><p>Tutorials, projects and updates published since you followed.</p></div></div>
+            {!followedSince ? (
+              <div className="dashboard-empty">
+                <Icon name="bell" size={24}/><strong>Follow to see what is new</strong>
+                <p>New tutorials and projects will appear here as they are published.</p>
+                <span data-tw><FollowButton/></span>
+              </div>
+            ) : feed.length > 0 ? (
+              <ul data-tw className="dashboard-link-list">
+                {feed.map((item) => (
+                  <li key={`${item.kind}:${item.href}:${item.at}`}>
+                    <Link href={item.href} className="dashboard-item-link">
+                      <span className="dashboard-item-icon"><Icon name={item.kind === "tutorial" ? "book" : item.kind === "project" ? "grid" : "bell"}/></span>
+                      <span className="dashboard-item-copy"><strong>{item.title}</strong><small>New {KIND_LABEL[item.kind].toLowerCase()} · {date(item.at)}</small></span>
+                      <Icon name="arrow" size={15}/>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="dashboard-empty compact-empty"><p>You are following. Nothing new has been published yet, and it will show here when it is.</p></div>
+            )}
+          </section>
+        </div>
       </div>
-    </div>
-    <div className="notice-box"><Icon name="info"/><p>Orders and project requests are not shown here yet.</p></div>
-  </section>;
+
+      <div className="notice-box"><Icon name="info"/><p>Orders and project requests are not shown here yet.</p></div>
+    </section>
+  );
 }
