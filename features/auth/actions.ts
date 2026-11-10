@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth/server";
 import { AUTH_ACCOUNT_LIMIT, AUTH_IP_LIMIT, clientIp, consumeRateLimit } from "@/lib/security/rate-limit";
 import { env } from "@/lib/environment/server";
 import { returnPathOrDefault } from "@/lib/auth/return-path";
+import { recordEngagementEvent } from "@/modules/analytics/engagement";
 import { forgotPasswordSchema, resetPasswordSchema, signInSchema, signUpSchema } from "./validation";
 
 export type AuthState = { error?: string; notice?: string };
@@ -39,6 +40,7 @@ export async function signUpAction(_: AuthState, formData: FormData): Promise<Au
 
   const { data, error } = await auth.signUp.email(parsed.data);
   if (error) return { error: "We couldn't create that account. Check your details or try signing in." };
+  await recordEngagementEvent("signup_completed", "/signup");
   if (!data?.token) return { notice: "Check your email to confirm your account, then sign in." };
 
   redirect(returnPathOrDefault(formData.get("next")));

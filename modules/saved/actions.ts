@@ -7,6 +7,7 @@ import { getCurrentUser } from "@/lib/auth/session";
 import { consumeRateLimit, type RateLimit } from "@/lib/security/rate-limit";
 import { getPublicTutorial } from "@/modules/content/repository";
 import { getPublicProject } from "@/modules/portfolio/repository";
+import { recordEngagementEvent } from "@/modules/analytics/engagement";
 
 const SAVE_LIMIT: RateLimit = { name: "saved-toggle", maxHits: 60, windowSeconds: 600 };
 const IMPORT_LIMIT: RateLimit = { name: "saved-import", maxHits: 5, windowSeconds: 600 };
@@ -30,9 +31,14 @@ export async function toggleSavedAction(kindInput: string, slugInput: string): P
 
   try {
     const removed = await serverDb.execute(sql`delete from public.saved_items where user_id = ${user.id}::uuid and kind = ${itemKind.data} and slug = ${itemSlug.data} returning slug`);
-    if (removed.rows.length > 0) { revalidatePath("/dashboard"); return { saved: false }; }
+    if (removed.rows.length > 0) {
+      await recordEngagementEvent("save_removed", `/${itemKind.data === "project" ? "projects" : "tutorials"}/${itemSlug.data}`, itemSlug.data);
+      revalidatePath("/dashboard");
+      return { saved: false };
+    }
     if (!(await isPublic(itemKind.data, itemSlug.data))) return { error: "That is no longer available to save." };
     await serverDb.execute(sql`insert into public.saved_items (user_id, kind, slug) values (${user.id}::uuid, ${itemKind.data}, ${itemSlug.data}) on conflict do nothing`);
+    await recordEngagementEvent("save_added", `/${itemKind.data === "project" ? "projects" : "tutorials"}/${itemSlug.data}`, itemSlug.data);
     revalidatePath("/dashboard");
     return { saved: true };
   } catch {

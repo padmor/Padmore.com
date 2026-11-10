@@ -4,6 +4,7 @@ import { serverDb } from "@/db/connection";
 import { getCurrentUser } from "@/lib/auth/session";
 import { consumeRateLimit, type RateLimit } from "@/lib/security/rate-limit";
 import { getFollowState, type FollowState } from "./repository";
+import { recordEngagementEvent } from "@/modules/analytics/engagement";
 
 const FOLLOW_LIMIT: RateLimit = { name: "site-follow", maxHits: 20, windowSeconds: 600 };
 
@@ -16,7 +17,9 @@ export async function toggleFollowAction(): Promise<FollowState | { error: strin
   try {
     const removed = await serverDb.execute(sql`delete from public.site_followers where user_id = ${user.id}::uuid returning user_id`);
     if (removed.rows.length === 0) await serverDb.execute(sql`insert into public.site_followers (user_id) values (${user.id}::uuid) on conflict do nothing`);
-    return await getFollowState(user.id);
+    const state = await getFollowState(user.id);
+    await recordEngagementEvent(state.following ? "follow_added" : "follow_removed", "/");
+    return state;
   } catch {
     console.error("Follow failed");
     return { error: "Following is not available right now. Please try again later." };

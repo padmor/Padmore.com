@@ -4,7 +4,7 @@ import { Icon } from "@/components/icon";
 const BENEFITS = [
   "Save tutorials and projects to your account",
   "Download tutorial files, slides and notes",
-  "See new tutorials and projects when you follow",
+  "Follow Padmore and see new work in your member dashboard",
   "Join the community conversation",
 ];
 

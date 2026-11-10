@@ -3,6 +3,7 @@ import { z } from "zod";
 import { serverDb } from "@/db/connection";
 import { collaborationRequestDetails, inquiries, newsletterSubscribers, projectRequestDetails } from "@/db/schema/schema";
 import { clientIp, consumeRateLimit, type RateLimit } from "@/lib/security/rate-limit";
+import { recordEngagementEvent } from "@/modules/analytics/engagement";
 
 export type PublicFormState = { error?: string; sent?: boolean };
 
@@ -88,6 +89,7 @@ export async function submitProjectRequestAction(_: PublicFormState, formData: F
       projectType: type,
       projectScope: lines([["Organization", organization], ["Budget", budget], ["Timeline", timeline], ["Reference", reference], ["Needs help defining it", guidance ? "Yes" : undefined]]),
     });
+    await recordEngagementEvent("project_request_submitted", "/request-project");
     return { sent: true };
   } catch {
     return { error: FAILED };
@@ -109,6 +111,7 @@ export async function submitCollaborationAction(_: PublicFormState, formData: Fo
       availability,
       proposal: lines([["Portfolio", portfolio], ["GitHub", github]]),
     });
+    await recordEngagementEvent("collaboration_submitted", "/build-with-me");
     return { sent: true };
   } catch {
     return { error: FAILED };
@@ -124,6 +127,7 @@ export async function subscribeAction(_: PublicFormState, formData: FormData): P
   if (!parsed.success) return { error: parsed.error.issues[0]?.message };
   try {
     await serverDb.insert(newsletterSubscribers).values({ email: parsed.data.email, source: "website" }).onConflictDoNothing();
+    await recordEngagementEvent("newsletter_subscribed", "/");
     return { sent: true };
   } catch {
     return { error: FAILED };

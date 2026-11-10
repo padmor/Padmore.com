@@ -32,7 +32,7 @@ export function AuthPromptProvider({ children }: { children: ReactNode }) {
         <button type="button" onClick={() => dialog.current?.close()} aria-label="Close" className="absolute top-3 right-3 grid size-9 place-items-center rounded-full text-muted-foreground transition hover:bg-muted hover:text-foreground"><X className="size-4"/></button>
         <span className="mx-auto grid size-12 place-items-center rounded-2xl bg-primary-soft text-primary"><LogIn className="size-6"/></span>
         <h2 id="auth-prompt-title" className="m-0 mt-4 font-display text-xl font-semibold tracking-[-0.03em] text-foreground">Sign in to {action}</h2>
-        <p className="m-0 mt-2 text-[15px] leading-relaxed text-soft-foreground">Sign in, or create a free account, to continue.</p>
+        <p className="m-0 mt-2 text-[15px] leading-relaxed text-soft-foreground">Create a free account to follow new work, keep projects and tutorials saved to your profile, and join the community. You can return to this page after signing in.</p>
         <div className="mt-6 grid gap-2.5">
           <Button asChild size="lg"><Link href={`/signin?next=${next}`}>Sign in</Link></Button>
           <Button asChild size="lg" variant="outline"><Link href={`/signup?next=${next}`}>Create an account <ArrowRight/></Link></Button>
