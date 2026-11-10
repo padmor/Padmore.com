@@ -3,6 +3,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { CartProvider } from "@/features/store/providers/cart-provider";
 import { AuthPromptProvider } from "@/features/community/components/auth-prompt";
+import { EngagementTracker } from "@/features/analytics/components/engagement-tracker";
 import { env } from "@/lib/environment/server";
 import { Geist } from "next/font/google";
 import "./tailwind.css";
@@ -23,5 +24,5 @@ export const metadata: Metadata = {
 export const viewport: Viewport = { width: "device-width", initialScale: 1, viewportFit: "cover", themeColor: "#ffffff" };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en" data-theme="light" className={geist.variable} suppressHydrationWarning><body><CartProvider><AuthPromptProvider><SiteHeader/><main className="site-main">{children}</main><SiteFooter/></AuthPromptProvider></CartProvider></body></html>;
+  return <html lang="en" data-theme="light" className={geist.variable} suppressHydrationWarning><body><CartProvider><AuthPromptProvider><EngagementTracker/><SiteHeader/><main className="site-main">{children}</main><SiteFooter/></AuthPromptProvider></CartProvider></body></html>;
 }

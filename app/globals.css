@@ -3231,3 +3231,20 @@ body::after {
     will-change: auto;
   }
 }
+
+
+/* Engagement analytics dashboard. */
+.engagement-stats { grid-template-columns: repeat(3,minmax(0,1fr)); }
+.engagement-setup-notice { display: grid; gap: 8px; padding: 20px; }
+.engagement-setup-notice p { margin: 0; color: var(--text-soft); line-height: 1.65; }
+.engagement-setup-notice code { padding: 2px 5px; border-radius: 5px; background: var(--bg-soft); }
+.engagement-pages { margin-top: 18px; }
+.engagement-panel-heading h2 { margin: 0; font-size: 17px; font-weight: 780; letter-spacing: -.03em; }
+.engagement-panel-heading p { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+.engagement-pages ol { display: grid; gap: 0; margin: 15px 0 0; padding: 0; list-style: none; }
+.engagement-pages li { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 12px 0; border-top: 1px solid var(--border); }
+.engagement-pages li span { overflow-wrap: anywhere; color: var(--text-soft); font-size: 13px; }
+.engagement-pages li strong { color: var(--text); font-size: 13px; font-variant-numeric: tabular-nums; }
+.engagement-privacy-note { margin-top: 14px; color: var(--muted); font-size: 11px; line-height: 1.6; }
+@media (max-width: 900px) { .engagement-stats { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+@media (max-width: 560px) { .engagement-stats { grid-template-columns: 1fr 1fr; gap: 8px; } }

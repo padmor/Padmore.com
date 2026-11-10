@@ -21,6 +21,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         {canEdit && <Link href="/admin/images"><Icon name="layers"/>Attached images</Link>}
         {(canEditAbout || roles.includes("support")) && <Link href="/admin/enquiries"><Icon name="mail"/>Enquiries</Link>}
         {canEditAbout && <Link href="/admin/subscribers"><Icon name="bell"/>Subscribers</Link>}
+        {canEditAbout && <Link href="/admin/engagement"><Icon name="chart-no-axes-combined"/>Engagement</Link>}
       </aside>
       <div className="admin-content">{children}</div>
     </div>
