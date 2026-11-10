@@ -30,7 +30,8 @@ export default async function WorkShowcasePage({ params }: { params: Promise<{ s
   // Reuse a real uploaded cover from the public project catalogue when a
   // corresponding database entry exists; otherwise the editorial cover remains.
   const publicProjects = await listPublicProjects().catch(() => []);
-  const resolved = resolvePortfolioShowcases(publicProjects).find((item) => item.slug === slug) ?? project;
+  const matchingImage = resolvePortfolioShowcases(publicProjects).find((item) => item.slug === slug)?.imageId;
+  const resolved = { ...project, imageId: matchingImage };
 
   return (
     <section className="page-container showcase-detail-page">

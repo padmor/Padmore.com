@@ -96,15 +96,12 @@ export type ResolvedPortfolioShowcase = PortfolioShowcase & {
 export function resolvePortfolioShowcases(projects: Project[] = []): ResolvedPortfolioShowcase[] {
   return PORTFOLIO_SHOWCASES.map((showcase) => {
     const match = projects.find((project) => {
-      const searchable = normalize(project.title + project.slug);
-      return showcase.matchTerms.some((term) => {
-        if (term.length <= 3) {
-          const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, "\\      const searchable = normalize(project.title + project.slug);
-      return showcase.matchTerms.some((term) => searchable.includes(normalize(term)));");
-          return new RegExp(`(^|[^a-z0-9])${escaped}($|[^a-z0-9])`, "i").test(project.title + " " + project.slug);
-        }
-        return searchable.includes(normalize(term));
-      });
+      const source = `${project.title} ${project.slug}`.toLowerCase();
+      const tokens = source.split(/[^a-z0-9]+/).filter(Boolean);
+      const searchable = normalize(source);
+      return showcase.matchTerms.some((term) =>
+        term.length <= 3 ? tokens.includes(term.toLowerCase()) : searchable.includes(normalize(term))
+      );
     });
 
     return {
