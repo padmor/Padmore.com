@@ -2712,3 +2712,13 @@ button[aria-busy="true"] > svg { margin-left: 0; }
   .home-site-footer .footer-newsletter { grid-column: 1/-1; }
   .home-site-footer .footer-bottom { gap: 8px; }
 }
+
+
+/* The reference uses short, wide project thumbnails on desktop. */
+@media (min-width: 561px) {
+  .project-showcase-media { aspect-ratio: 3.05 / 1; }
+  .project-showcase-artwork { min-height: 0; padding: 8px 11px; }
+  .project-showcase-artwork-center { gap: 4px; }
+  .project-showcase-artwork-mark { width: 31px; height: 31px; border-radius: 9px; }
+  .project-showcase-artwork-center strong { font-size: clamp(12px, 1.05vw, 16px); }
+}
