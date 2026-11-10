@@ -15,14 +15,12 @@ export function ProjectShowcaseArtwork({ project, imageId }: { project: Resolved
         <span>PADMORE / WORK</span>
       </div>
       <div className="project-showcase-artwork-center">
-        <span className="project-showcase-artwork-mark" aria-hidden="true">
-          {project.title === "Green Building Creations" ? "GBC" : project.title === "GBHPL" ? "G" : "H"}
-        </span>
+        <span className="project-showcase-artwork-mark" aria-hidden="true">{project.mark}</span>
         <strong>{project.coverTitle}</strong>
       </div>
       <div className="project-showcase-artwork-bottom">
         <span>{project.coverNote}</span>
-        <span>0{project.slug === "green-building-creations" ? "1" : project.slug === "gbhpl" ? "2" : "3"}</span>
+        <span>0{project.slug === "green-building-creations" ? "1" : project.slug === "gbhpl" ? "2" : project.slug === "hostivo" ? "3" : "4"}</span>
       </div>
       <span className="project-showcase-artwork-orbit" aria-hidden="true" />
     </div>
@@ -43,12 +41,9 @@ export function ProjectShowcaseCard({ project }: { project: ResolvedPortfolioSho
         <span className="project-showcase-subtitle">{project.subtitle}</span>
         <h3><Link href={`/work/${project.slug}`}>{project.title}</Link></h3>
         <p>{project.description}</p>
-        <ul className="project-showcase-tags" aria-label="Project focus">
-          {project.tags.slice(0, 4).map((tag) => <li key={tag}>{tag}</li>)}
-        </ul>
         <div className="project-showcase-actions">
           <Link href={`/work/${project.slug}`} className="project-showcase-details">
-            Project overview <ArrowUpRight aria-hidden="true" />
+            View project <ArrowUpRight aria-hidden="true" />
           </Link>
           {project.slug === "gbhpl" && project.websiteUrl && (
             <a href={project.websiteUrl} target="_blank" rel="noopener noreferrer" aria-label="Visit GBHPL live website">

@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { HeroIntro } from "@/features/home/components/hero-intro";
 import { HeroVisual } from "@/features/home/components/hero-visual";
+import { HomeChangesPanel } from "@/features/home/components/home-changes-panel";
 import { ProjectShowcaseCard } from "@/features/projects/components/project-showcase-card";
 import { TutorialCard } from "@/features/tutorials/components/tutorial-card";
 import { SectionHeading } from "@/components/page-intro";
@@ -12,6 +13,14 @@ import { listPublicProjects } from "@/modules/portfolio/repository";
 import { resolvePortfolioShowcases } from "@/modules/portfolio/showcases";
 
 export const revalidate = 300;
+
+const featuredTechnologies = [
+  { mark: "N", name: "Next.js", tone: "next" },
+  { mark: "⚛", name: "React", tone: "react" },
+  { mark: "TS", name: "TypeScript", tone: "typescript" },
+  { mark: "≈", name: "Tailwind CSS", tone: "tailwind" },
+  { mark: "PG", name: "PostgreSQL", tone: "postgres" },
+];
 
 export default async function HomePage() {
   const [projects, tutorials, about] = await Promise.all([
@@ -46,7 +55,7 @@ export default async function HomePage() {
 
               <h1 className="home-hero-title">
                 Padmore Yeb
-                <span>Web &amp; Mobile Application Developer.</span>
+                <span><strong>Web &amp; Mobile</strong> Application Developer.</span>
               </h1>
 
               <p className="home-hero-copy">
@@ -64,26 +73,25 @@ export default async function HomePage() {
                 </Button>
               </div>
 
-              {about.skills.length > 0 && (
-                <ul className="home-skill-strip" aria-label="Core technologies and skills">
-                  {about.skills.slice(0, 5).map((skill) => (
-                    <li key={skill}>
-                      <span aria-hidden="true">{skill.slice(0, 2).toUpperCase()}</span>
-                      {skill}
-                    </li>
-                  ))}
-                </ul>
-              )}
+              <ul className="home-skill-strip" aria-label="Core technologies and skills">
+                {featuredTechnologies.map((technology) => (
+                  <li key={technology.name}>
+                    <span className={`technology-mark tone-${technology.tone}`} aria-hidden="true">{technology.mark}</span>
+                    {technology.name}
+                  </li>
+                ))}
+              </ul>
             </>
           }
           visual={<HeroVisual photoId={heroPhotoId} />}
         />
+        <HomeChangesPanel />
       </section>
 
       <section id="featured-projects" className="page-container home-page-section" aria-label="Featured projects">
         <SectionHeading
           title="Featured Projects"
-          description="Selected websites and digital products I have worked on."
+          description="A selection of my recent work and personal projects."
           href="/projects"
           linkLabel="View all projects"
         />
@@ -114,10 +122,10 @@ export default async function HomePage() {
             </span>
             <div className="home-tutorial-empty-copy">
               <h3>Tutorials are coming soon</h3>
-              <p>I’m preparing practical guides and resources. Stay tuned.</p>
+              <p>I’m working on some helpful guides. Stay tuned!</p>
             </div>
             <Link href="#newsletter" className="button button-primary">
-              Get notified <ArrowRight aria-hidden="true" />
+              <span aria-hidden="true">♧</span> Get notified <ArrowRight aria-hidden="true" />
             </Link>
           </div>
         )}

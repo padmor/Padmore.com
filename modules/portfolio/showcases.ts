@@ -12,7 +12,8 @@ export type PortfolioShowcase = {
   coverKicker: string;
   coverTitle: string;
   coverNote: string;
-  theme: "green" | "amber" | "blue";
+  mark: string;
+  theme: "green" | "amber" | "blue" | "navy";
   websiteUrl?: string;
   websiteLabel?: string;
   matchTerms: string[];
@@ -22,42 +23,44 @@ export const PORTFOLIO_SHOWCASES: PortfolioShowcase[] = [
   {
     slug: "green-building-creations",
     title: "Green Building Creations",
-    subtitle: "Company website · Sustainable design & construction",
+    subtitle: "Sustainable construction website",
     description:
-      "A company website for a Ghanaian firm working across planning, architectural design and building construction. The interface presents its services and sustainable, quality-focused approach.",
+      "A company website for a Ghanaian firm working across planning, architectural design and building construction.",
     status: "Interface completed",
     statusTone: "complete",
     tags: ["Corporate website", "Architecture", "Construction"],
     highlights: [
-      "Website interface for the company’s public presence.",
+      "Company website interface for the public-facing brand.",
       "Service presentation across planning, architectural design and construction.",
-      "Content structured around the firm’s focus on quality, timely delivery and sustainable building.",
+      "Content structured around quality, timely delivery and sustainable building.",
     ],
     coverKicker: "GREEN BUILDING CREATIONS",
     coverTitle: "Plan. Design. Build.",
     coverNote: "Sustainable spaces, thoughtfully presented.",
+    mark: "GBC",
     theme: "green",
     websiteUrl: "https://gh.linkedin.com/company/green-building-creations",
     websiteLabel: "Company profile",
-    matchTerms: ["greenbuildingcreations", "greenbuildingcreation", "gbc"],
+    matchTerms: ["greenbuildingcreations", "greenbuildingcreation"],
   },
   {
     slug: "gbhpl",
     title: "GBHPL",
-    subtitle: "E-commerce · Business operations",
+    subtitle: "Beverages eCommerce platform",
     description:
-      "A rebuild of the Gid’s Beverages & Health Products Ltd. website, bringing product discovery and online ordering together with payment, delivery and manager workflows.",
+      "A rebuild of Gid’s Beverages & Health Products Ltd., combining product discovery and online ordering with payment, delivery and manager workflows.",
     status: "Live",
     statusTone: "live",
     tags: ["Online ordering", "Payments", "Delivery", "Manager portal"],
     highlights: [
-      "Product browsing and online order flows.",
+      "Product browsing and online ordering.",
       "Payment and delivery workflows.",
-      "Manager portal for day-to-day product and order operations.",
+      "Manager portal for product and order operations.",
     ],
     coverKicker: "GID’S BEVERAGES & HEALTH PRODUCTS",
     coverTitle: "From product to doorstep.",
     coverNote: "A connected e-commerce experience.",
+    mark: "G",
     theme: "amber",
     websiteUrl: "https://gbhpl.net/",
     websiteLabel: "Visit live website",
@@ -66,7 +69,7 @@ export const PORTFOLIO_SHOWCASES: PortfolioShowcase[] = [
   {
     slug: "hostivo",
     title: "Hostivo",
-    subtitle: "Accommodation platform · In development",
+    subtitle: "Hostel booking system",
     description:
       "A hostel accommodation platform designed around online applications, payment tracking and allocation updates for a single residence.",
     status: "In development",
@@ -80,8 +83,30 @@ export const PORTFOLIO_SHOWCASES: PortfolioShowcase[] = [
     coverKicker: "HOSTIVO",
     coverTitle: "A clearer way to find a place.",
     coverNote: "Accommodation workflows, brought together.",
+    mark: "H",
     theme: "blue",
     matchTerms: ["hostivo"],
+  },
+  {
+    slug: "nexus",
+    title: "Nexus",
+    subtitle: "All-in-one AI hardware concept",
+    description:
+      "An offline-first hardware concept exploring natural voice and gesture control for computers, phones and connected devices.",
+    status: "In Progress",
+    statusTone: "progress",
+    tags: ["AI hardware", "Voice control", "Gesture interaction", "Offline-first"],
+    highlights: [
+      "Explores natural voice and gesture-based device control.",
+      "Designed around offline-first operation, with connectivity when permitted.",
+      "A hardware-assisted concept currently being developed and explored.",
+    ],
+    coverKicker: "NEXUS · CIRCUIT REBELS",
+    coverTitle: "Control, naturally.",
+    coverNote: "An offline-first AI hardware concept.",
+    mark: "N",
+    theme: "navy",
+    matchTerms: ["nexus"],
   },
 ];
 

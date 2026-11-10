@@ -60,7 +60,10 @@ export function SiteHeader() {
             <Link href="/projects" className="icon-button header-search" aria-label="Browse projects">
               <Icon name="search" />
             </Link>
-            <ThemeToggle />
+            <Link href="/updates" className="icon-button header-notifications" aria-label="View latest updates">
+              <Icon name="bell" />
+              <span className="notification-dot" aria-hidden="true" />
+            </Link>
             <FollowButton compact />
             <Link href="/request-project" className="button button-primary header-hire-link">
               <Icon name="send" size={16} /> Hire Me
@@ -94,17 +97,13 @@ export function SiteHeader() {
                 <Icon name="chevron" size={15} />
               </Link>
             ))}
+            <div className="mobile-menu-appearance">
+              <span>Appearance</span>
+              <ThemeToggle />
+            </div>
           </nav>
         )}
       </header>
-
-      <nav className="bottom-nav" aria-label="Quick navigation">
-        <Link href="/" className={isActive("/") ? "active" : ""}><Icon name="home"/><span>Home</span></Link>
-        <Link href="/projects" className={isActive("/projects") ? "active" : ""}><Icon name="grid"/><span>Projects</span></Link>
-        <Link href="/tutorials" className={isActive("/tutorials") ? "active" : ""}><Icon name="book"/><span>Tutorials</span></Link>
-        <Link href="/store" className={isActive("/store") ? "active" : ""}><Icon name="store"/><span>Store</span></Link>
-        <Link href="/profile" className={isActive("/profile") ? "active" : ""}><Icon name="user"/><span>Profile</span></Link>
-      </nav>
     </>
   );
 }
