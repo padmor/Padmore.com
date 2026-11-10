@@ -10,7 +10,8 @@ export function HeroVisual({ photoId, fallbackSrc }: { photoId?: string | null; 
         {photoId ? (
           <SiteImage id={photoId} alt="Padmore Yeb, web and mobile application developer" />
         ) : fallbackSrc ? (
-          <img className="home-hero-reference-photo" src={fallbackSrc} alt="Portrait-style hero visual from the approved Padmore portfolio design" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img className="home-hero-reference-photo" src={fallbackSrc} alt="Padmore Yeb portfolio hero portrait" fetchPriority="high" />
         ) : (
           <div className="home-hero-photo-fallback" role="img" aria-label="Padmore Yeb">
             <span>PY</span>

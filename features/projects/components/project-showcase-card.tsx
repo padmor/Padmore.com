@@ -10,7 +10,8 @@ export function ProjectShowcaseArtwork({ project, imageId }: { project: Resolved
 
   return (
     <div className={`project-showcase-reference-cover cover-${project.referenceCoverIndex}`} role="img" aria-label={`${project.title} project preview from the approved portfolio design`}>
-      <img src="/images/showcase/padmore-project-covers.webp" alt="" aria-hidden="true" />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/images/showcase/padmore-project-covers.webp" alt="" aria-hidden="true" loading="lazy" />
     </div>
   );
 }
