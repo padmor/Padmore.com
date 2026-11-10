@@ -15,88 +15,33 @@ export type RecentItem = {
 
 const STORAGE_KEY = "padmore-recently-viewed-v1";
 const EVENT_NAME = "padmore:recently-viewed";
+const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
-export function rememberRecentlyViewed(item: Omit<RecentItem, "viewedAt">) {
-  if (typeof window === "undefined" || window.navigator.doNotTrack === "1") return;
-
-  try {
-    const current = JSON.parse(window.localStorage.getItem(STORAGE_KEY) || "[]");
-    const existing: RecentItem[] = Array.isArray(current) ? current.filter((entry) =>
-      entry && typeof entry.slug === "string" && typeof entry.href === "string"
-    ) : [];
-    const next: RecentItem[] = [
-      { ...item, viewedAt: new Date().toISOString() },
-      ...existing.filter((entry) => !(entry.kind === item.kind && entry.slug === item.slug)),
-    ].slice(0, 8);
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-    window.dispatchEvent(new Event(EVENT_NAME));
-  } catch {
-    // Browsing should remain functional when local storage is unavailable.
-  }
-}
-
-export function RecentlyViewedLink({
-  kind,
-  slug,
-  title,
-  href,
-  className,
-  children,
-  onClick,
-}: {
-  kind: RecentItemKind;
-  slug: string;
-  title: string;
-  href: string;
-  className?: string;
-  children: ReactNode;
-  onClick?: () => void;
-}) {
-  return (
-    <Link
-      href={href}
-      className={className}
-      onClick={() => { rememberRecentlyViewed({ kind, slug, title, href }); onClick?.(); }}
-    >
-      {children}
-    </Link>
-  );
+function expectedHref(kind: RecentItemKind, slug: string) {
+  if (kind === "project") return [`/projects/${slug}`, `/work/${slug}`];
+  if (kind === "tutorial") return [`/tutorials/${slug}`];
+  return [`/store/${slug}`];
 }
 
 function isSafeRecentItem(item: unknown): item is RecentItem {
   if (!item || typeof item !== "object") return false;
   const value = item as Partial<RecentItem>;
-  if (!["project", "tutorial", "product"].includes(value.kind ?? "")) return false;
-  if (typeof value.slug !== "string" || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value.slug)) return false;
+  const kind = value.kind;
+  if (kind !== "project" && kind !== "tutorial" && kind !== "product") return false;
+  if (typeof value.slug !== "string" || !SLUG_PATTERN.test(value.slug)) return false;
   if (typeof value.title !== "string" || value.title.length > 200) return false;
+  if (typeof value.href !== "string" || !expectedHref(kind, value.slug).includes(value.href)) return false;
   if (typeof value.viewedAt !== "string" || Number.isNaN(Date.parse(value.viewedAt))) return false;
-  const expected = value.kind === "project"
-    ? new RegExp(`^/(?:projects|work)/${value.slug}"use client";
-
-import Link from "next/link";
-import { useEffect, useState, type ReactNode } from "react";
-import { Icon } from "@/components/icon";
-
-export type RecentItemKind = "project" | "tutorial" | "product";
-export type RecentItem = {
-  kind: RecentItemKind;
-  slug: string;
-  title: string;
-  href: string;
-  viewedAt: string;
-};
-
-const STORAGE_KEY = "padmore-recently-viewed-v1";
-const EVENT_NAME = "padmore:recently-viewed";
+  return true;
+}
 
 export function rememberRecentlyViewed(item: Omit<RecentItem, "viewedAt">) {
   if (typeof window === "undefined" || window.navigator.doNotTrack === "1") return;
+  if (!SLUG_PATTERN.test(item.slug) || item.title.length > 200 || !expectedHref(item.kind, item.slug).includes(item.href)) return;
 
   try {
     const current = JSON.parse(window.localStorage.getItem(STORAGE_KEY) || "[]");
-    const existing: RecentItem[] = Array.isArray(current) ? current.filter((entry) =>
-      entry && typeof entry.slug === "string" && typeof entry.href === "string"
-    ) : [];
+    const existing: RecentItem[] = Array.isArray(current) ? current.filter(isSafeRecentItem) : [];
     const next: RecentItem[] = [
       { ...item, viewedAt: new Date().toISOString() },
       ...existing.filter((entry) => !(entry.kind === item.kind && entry.slug === item.slug)),
@@ -129,81 +74,14 @@ export function RecentlyViewedLink({
     <Link
       href={href}
       className={className}
-      onClick={() => { rememberRecentlyViewed({ kind, slug, title, href }); onClick?.(); }}
+      onClick={() => {
+        rememberRecentlyViewed({ kind, slug, title, href });
+        onClick?.();
+      }}
     >
       {children}
     </Link>
   );
-}
-
-)
-    : new RegExp(`^/${value.kind === "tutorial" ? "tutorials" : "store"}/${value.slug}"use client";
-
-import Link from "next/link";
-import { useEffect, useState, type ReactNode } from "react";
-import { Icon } from "@/components/icon";
-
-export type RecentItemKind = "project" | "tutorial" | "product";
-export type RecentItem = {
-  kind: RecentItemKind;
-  slug: string;
-  title: string;
-  href: string;
-  viewedAt: string;
-};
-
-const STORAGE_KEY = "padmore-recently-viewed-v1";
-const EVENT_NAME = "padmore:recently-viewed";
-
-export function rememberRecentlyViewed(item: Omit<RecentItem, "viewedAt">) {
-  if (typeof window === "undefined" || window.navigator.doNotTrack === "1") return;
-
-  try {
-    const current = JSON.parse(window.localStorage.getItem(STORAGE_KEY) || "[]");
-    const existing: RecentItem[] = Array.isArray(current) ? current.filter((entry) =>
-      entry && typeof entry.slug === "string" && typeof entry.href === "string"
-    ) : [];
-    const next: RecentItem[] = [
-      { ...item, viewedAt: new Date().toISOString() },
-      ...existing.filter((entry) => !(entry.kind === item.kind && entry.slug === item.slug)),
-    ].slice(0, 8);
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-    window.dispatchEvent(new Event(EVENT_NAME));
-  } catch {
-    // Browsing should remain functional when local storage is unavailable.
-  }
-}
-
-export function RecentlyViewedLink({
-  kind,
-  slug,
-  title,
-  href,
-  className,
-  children,
-  onClick,
-}: {
-  kind: RecentItemKind;
-  slug: string;
-  title: string;
-  href: string;
-  className?: string;
-  children: ReactNode;
-  onClick?: () => void;
-}) {
-  return (
-    <Link
-      href={href}
-      className={className}
-      onClick={() => { rememberRecentlyViewed({ kind, slug, title, href }); onClick?.(); }}
-    >
-      {children}
-    </Link>
-  );
-}
-
-);
-  return typeof value.href === "string" && expected.test(value.href);
 }
 
 export function RecentlyViewed() {
@@ -220,6 +98,7 @@ export function RecentlyViewed() {
       }
       setReady(true);
     };
+
     refresh();
     window.addEventListener("storage", refresh);
     window.addEventListener(EVENT_NAME, refresh);
@@ -230,7 +109,11 @@ export function RecentlyViewed() {
   }, []);
 
   function clear() {
-    try { window.localStorage.removeItem(STORAGE_KEY); } catch { /* optional convenience */ }
+    try {
+      window.localStorage.removeItem(STORAGE_KEY);
+    } catch {
+      // Clearing local history is a convenience; it must not affect the account.
+    }
     setItems([]);
   }
 
@@ -245,6 +128,7 @@ export function RecentlyViewed() {
         </div>
         {items.length > 0 && <button type="button" className="catalog-clear" onClick={clear}>Clear history</button>}
       </div>
+
       {items.length > 0 ? (
         <ul className="dashboard-link-list">
           {items.map((item) => (
